@@ -7,6 +7,7 @@
 
 library(vegan)        # running rarefaction analysis
 library(tidyverse)    # organizing the data 
+library(tidyr)        # organizing the data
 library(dplyr)        # organizing the data
 library(plotrix)      #
 library(rareNMtests)  # running rarefaction analysis
@@ -17,38 +18,43 @@ library(raster)       # for raster object
 
 # wd:
 wd_processed_data <- "C:/Users/inbar/OneDrive/desktop/r/chapter_2/MoBr/data/processed"
+wd_raw_data <- "C:/Users/inbar/OneDrive/desktop/r/chapter_2/MoBr/data/raw"
 
 # read data:
+# wide: 
 setwd(wd_processed_data)
+wide_med <- read.csv("wide_med.csv")
+wide_red <- read.csv("wide_red.csv")
 wide_opCode <- read.csv("wide_opCode.csv")
+
+#removing the wired column x
+wide_med = wide_med %>% dplyr::select(-X) # rm weird column
+wide_red = wide_red %>% dplyr::select(-X) # rm weird column
 wide_opCode = wide_opCode %>% dplyr::select(-X) # rm weird column
+
+#removing samples from Sdot Yam from wide med:
+wide_med <- wide_med[-which(wide_med$OpCode == "isrsdot201119A" | wide_med$OpCode == "isrsdot201119B"),]
 
 # _______________________________________________________________
 
                 # preliminary exploration #
 # _______________________________________________________________
 
-# keep med sea observation only
-wide_opCode_med <- filter(wide_opCode, sea == "med")
-
-# keep red sea observations only
-wide_opCode_red <- filter(wide_opCode, sea == "red")
-
 # define the first column of species
 first_species <- 7
 
 # create species metric
-species_metric_med <- wide_opCode_med[,first_species:length(wide_opCode_med)]
-species_metric_red <- wide_opCode_red[,first_species:length(wide_opCode_red)]
+species_metric_med <- wide_med[,first_species:length(wide_med)]
+species_metric_red <- wide_red[,first_species:length(wide_red)]
 
 # _______________________________________________________________
 
                     # depth-ranges
 
 # med
-range(wide_opCode_med$depth, na.rm=TRUE) # 5.6 - 147 m
+range(wide_med$depth, na.rm=TRUE) # 5.6 - 147 m
 # depths histogram for med sea
-wide_opCode_med %>% 
+wide_med %>% 
   ggplot()+
   aes(x = depth)+     
   geom_histogram() + ggtitle("med sea - samples count at each depth") 
@@ -57,9 +63,9 @@ wide_opCode_med %>%
 # -----------
 
 # red:
-range(wide_opCode_red$depth, na.rm=TRUE) # 8.1 - 149 m
+range(wide_red$depth, na.rm=TRUE) # 8.1 - 149 m
 # depths histogram for red sea
-wide_opCode_red %>% 
+wide_red %>% 
   ggplot()+
   aes(x = depth)+
   geom_histogram() + ggtitle("red sea - samples count at each depth")  # most of the depths have 3-5 observations\opcodes
@@ -68,42 +74,53 @@ wide_opCode_red %>%
 
                       # map view
 # make sf objects:
-wide_opCode_med_sf <- st_as_sf(wide_opCode_med, coords = c('lon_x', 'lat_y'), crs = crs("+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0")) # WGS84 is in decimal degrees
-wide_opCode_red_sf <- st_as_sf(wide_opCode_red, coords = c('lon_x', 'lat_y'), crs = crs("+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0"))
+wide_med_sf <- st_as_sf(wide_med, coords = c('lon_x', 'lat_y'), crs = crs("+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0")) # WGS84 is in decimal degrees
+wide_red_sf <- st_as_sf(wide_red, coords = c('lon_x', 'lat_y'), crs = crs("+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0"))
 
 # visualize:
-mapView(wide_opCode_med_sf, zcol = "depth")
-mapView(wide_opCode_red_sf, zcol = "depth")
+mapView(wide_med_sf, zcol = "depth")
+mapView(wide_red_sf, zcol = "depth")
 
 # _______________________________________________________________
 
           # explore sampling effort at each sea
+wide_med_sum_s <- wide_med %>% 
+  mutate(abundance = rowSums(wide_med[,first_species:length(wide_med)])) %>%
+  mutate(richness = rowSums(wide_med[, first_species:ncol(wide_med)] > 0)) 
 
-# add 2 additional columns: abundance and richness per sample:
-wide_opCode_med_sum<- wide_opCode_med %>% 
-  mutate(abundance = rowSums(wide_opCode_med[,first_species:length(wide_opCode_med)])) %>%
-  mutate(richness = rowSums(wide_opCode_med[, first_species:ncol(wide_opCode_med)] > 0)) %>%
+t <- wide_med_sum_s %>% dplyr::filter(abundance == 338)
+
+# med: add 2 additional columns: abundance and richness per sample:
+wide_med_sum <- wide_med %>% 
+  mutate(abundance = rowSums(wide_med[,first_species:length(wide_med)])) %>%
+  mutate(richness = rowSums(wide_med[, first_species:ncol(wide_med)] > 0)) %>%
   dplyr::select(OpCode, depth, lon_x, lat_y, richness, abundance)
 
 
 # check the difference between the smallest n sample and the largest n sample in each sea (the variance in abundance):
-min(wide_opCode_med_sum$abundance) # 0
-max(wide_opCode_med_sum$abundance) # 338
+min(wide_med_sum$abundance) # 0
+max(wide_med_sum$abundance) # 338
 # 338 folds variation in the alpha scale (sample scale)
 
+# sum richness:
+min(wide_med_sum$richness) # 0
+max(wide_med_sum$richness) # 15
 # -----------
 
-# add 2 additional columns: abundance and richness per sample:
-wide_opCode_red_sum <- wide_opCode_red %>% 
-  mutate(abundance = rowSums(wide_opCode_red[,first_species:length(wide_opCode_red)])) %>%
-  mutate(richness = rowSums(wide_opCode_red[, first_species:ncol(wide_opCode_red)] > 0)) %>%
+# red: add 2 additional columns: abundance and richness per sample:
+wide_red_sum <- wide_red %>% 
+  mutate(abundance = rowSums(wide_red[,first_species:length(wide_red)])) %>%
+  mutate(richness = rowSums(wide_red[, first_species:ncol(wide_red)] > 0)) %>%
   dplyr::select(OpCode, depth, lon_x, lat_y, richness, abundance)
 
 # check the difference between the smallest n sample and the largest n sample in each sea (the variance in abundance):
-min(wide_opCode_red_sum$abundance) # 1
-max(wide_opCode_red_sum$abundance) # 252
+min(wide_red_sum$abundance) # 1
+max(wide_red_sum$abundance) # 252
 # 252 folds variation in the alpha scale (sample scale)
 
+# sum richness:
+min(wide_red_sum$richness) # 1
+max(wide_red_sum$richness) # 42
 # _______________________________________________________________
 
 # I noticed I have samples with very low abundances (0, 1, 2...) in the two seas
@@ -111,36 +128,22 @@ max(wide_opCode_red_sum$abundance) # 252
 # but what should be the width of the bin? 10m? 20m?
 # _______________________________________________________________
 
-           # sum abundance and richness for the wide data_sets:
-
-# med:
-med_matrix_r <- wide_opCode_med %>% 
-  mutate(abundance = rowSums(wide_opCode_med[first_species:length(wide_opCode_med)])) %>%
-  mutate(richness = rowSums(wide_opCode_med[, first_species:ncol(wide_opCode_med)] > 0)) 
-
-# red:
-red_matrix_r <- wide_opCode_red %>% 
-  mutate(abundance = rowSums(wide_opCode_red[first_species:length(wide_opCode_red)])) %>%
-  mutate(richness = rowSums(wide_opCode_red[, first_species:ncol(wide_opCode_red)] > 0))
-
-# _______________________________________________________________
-
                  # plot individuals ~ depth (wide_data)
 
 # med - points: 
-ggplot(med_matrix_r,aes(x=depth,y=abundance))+
+ggplot(wide_med_sum,aes(x=depth,y=abundance))+
   geom_point(size = 1.5, col = "cyan") + ggtitle("med sea abundance ~ depth") 
 
 # med - line: 
-ggplot(med_matrix_r,aes(x=depth,y=abundance))+
+ggplot(wide_med_sum,aes(x=depth,y=abundance))+
   geom_line(size = 1.5, col = "cyan") + ggtitle("med sea abundance ~ depth") 
 
 # red - points: 
-ggplot(red_matrix_r,aes(x=depth,y=abundance))+
+ggplot(wide_red_sum,aes(x=depth,y=abundance))+
   geom_point(size = 1.5, col = "indianred2") + ggtitle("red sea abundance ~ depth") 
 
 # red - line: 
-ggplot(red_matrix_r,aes(x=depth,y=abundance))+
+ggplot(wide_red_sum,aes(x=depth,y=abundance))+
   geom_line(size = 1.5, col = "indianred2") + ggtitle("red sea abundance ~ depth") 
 
 # -----------
@@ -148,19 +151,19 @@ ggplot(red_matrix_r,aes(x=depth,y=abundance))+
                   # plot richness ~ depth (wide_data)
 
 # med - points: 
-ggplot(med_matrix_r,aes(x=depth,y=richness))+
+ggplot(wide_med_sum,aes(x=depth,y=richness))+
   geom_point(size = 1.5, col = "cyan") + ggtitle("med sea richness ~ depth") 
 
 # med - line: 
-ggplot(med_matrix_r,aes(x=depth,y=richness))+
+ggplot(wide_med_sum,aes(x=depth,y=richness))+
   geom_line(size = 1.5, col = "cyan") + ggtitle("med sea richness ~ depth") 
 
 # red - points: 
-ggplot(red_matrix_r,aes(x=depth,y=richness))+
+ggplot(wide_red_sum,aes(x=depth,y=richness))+
   geom_point(size = 1.5, col = "indianred2") + ggtitle("red sea richness ~ depth") 
 
 # red - line: 
-ggplot(red_matrix_r,aes(x=depth,y=richness))+
+ggplot(wide_red_sum,aes(x=depth,y=richness))+
   geom_line(size = 1.5, col = "indianred2") + ggtitle("red sea richness ~ depth")
 
 # _______________________________________________________________
@@ -170,8 +173,8 @@ ggplot(red_matrix_r,aes(x=depth,y=richness))+
 
 # I chose 20m because I saw other papers group in bins of 20 m, but 10 is also an option
 
-med_depth_bins <- med_matrix_r
-red_depth_bins <- red_matrix_r
+med_depth_bins <- wide_med
+red_depth_bins <- wide_red
 
 # 5.6 - 147 m to 8 layers
 med_depth_bins$depth <- cut(med_depth_bins$depth,                                          
@@ -186,23 +189,58 @@ red_depth_bins$depth <- cut(red_depth_bins$depth,
 # _______________________________________________________________
 
                        # summary table 
+# to get the richness in each depth bin, without recounting the same species twice
+# I will move to long formate and then will group by depth and species and count them:
+
+#med:
+med_bins_long <- med_depth_bins %>%   # the df to convert
+  dplyr::select(-c(1, 2, 4, 5, 6)) %>%  # columns to remove
+  pivot_longer(!depth, names_to = "species", values_to = "count") %>% # transforming to wide
+  filter(!count == 0) %>% #removing rows with 0 abundance so species will not be counted when they are not present
+  dplyr::select(-3) %>% # removing the abundance column
+  group_by(depth) %>%  # grouping by sea and species
+  summarise(richness = n_distinct(species)) # richness per depth bin - no repeated species
+
+#red:
+red_bins_long <- red_depth_bins %>%   # the df to convert
+  dplyr::select(-c(1, 2, 4, 5, 6)) %>%  # columns to remove
+  pivot_longer(!depth, names_to = "species", values_to = "count") %>% # transforming to wide
+  filter(!count == 0) %>% #removing rows with 0 abundance so species will not be counted when they are not present
+  dplyr::select(-3) %>% # removing the abundance column
+  group_by(depth) %>%  # grouping by sea and species
+  summarise(richness = n_distinct(species)) # richness per depth bin - no repeated species
+
+# _______________________________________________________________
 
 # med:
-med_table <- med_depth_bins %>% 
+med_abundance <- med_depth_bins %>% 
+  mutate(abundance = rowSums(med_depth_bins[,first_species:length(med_depth_bins)])) %>%
   group_by(depth) %>% 
-    summarize(abundance = sum(abundance), richness = sum(richness), samples = n())
+    summarize(abundance = sum(abundance), samples = n())
   
 # red:
-red_table <- red_depth_bins %>% 
+red_abundance <- red_depth_bins %>% 
+  mutate(abundance = rowSums(red_depth_bins[,first_species:length(red_depth_bins)])) %>%
   group_by(depth) %>% 
-    summarize(abundance = sum(abundance), richness = sum(richness), samples = n())
+  summarize(abundance = sum(abundance), samples = n())
 
 # for the binned depths groups: check the difference between the smallest n sample and the largest n sample in each sea (the variance in abundance):
-min(med_table$abundance) # 40 - deepest band
-max(med_table$abundance) # 1064 - shallowest band
+min(med_abundance$abundance) # 40 - deepest band - the smallest sampling effort
+max(med_abundance$abundance) # 1010 - shallowest band
 
-min(red_table$abundance) # 30 - deepest band
-max(red_table$abundance) # 1169 - second to shallowest band
+min(red_abundance$abundance) # 30 - deepest band the smallest sampling effort
+max(red_abundance$abundance) # 1169 - second to shallowest band
+
+# _______________________________________________________________
+
+# merging 2 dfs to create a summarise for the depth bins ecology
+#med:
+med_table <- merge(med_bins_long, med_abundance, by = c("depth"), all.x =TRUE)
+med_table <- med_table[,c("depth", "abundance", "richness", "samples")]
+
+#red:
+red_table <- merge(red_abundance, red_bins_long, by = c("depth"), all.x =TRUE)
+red_table <- red_table[,c("depth", "abundance", "richness", "samples")]
 
 # _______________________________________________________________
 
@@ -210,24 +248,24 @@ max(red_table$abundance) # 1169 - second to shallowest band
              # plot individuals ~ depth (10 m bins)
 
 # med - points: 
-ggplot(med_table,aes(x=depth,y=n))+
-  geom_point(size = 1.5, col = "blue") + ggtitle("med sea abundance ~ depth (binned)") 
+ggplot(med_table,aes(x=depth,y=abundance))+
+  geom_point(size = 2.5, col = "blue") + ggtitle("med sea abundance ~ depth (binned)") 
 
 # red - points: 
-ggplot(red_table,aes(x=depth,y=n))+
-  geom_point(size = 1.5, col = "red") + ggtitle("red sea abundance ~ depth (binned)") 
+ggplot(red_table,aes(x=depth,y=abundance))+
+  geom_point(size = 2.5, col = "red") + ggtitle("red sea abundance ~ depth (binned)") 
 
 # -----------
 
                 # plot richness ~ depth (10 m bins)
 
 # med - points: 
-ggplot(med_table,aes(x=depth,y=s))+
-  geom_point(size = 1.5, col = "blue") + ggtitle("med sea richness ~ depth (binned)") 
+ggplot(med_bins_long ,aes(x=depth,y=richness))+
+  geom_point(size = 2.5, col = "blue") + ggtitle("med sea richness ~ depth (binned)") 
 
 # red - points: 
-ggplot(red_table, aes(x=depth,y=s))+
-  geom_point(size = 1.5, col = "red") + ggtitle("red sea richness ~ depth (binned)") 
+ggplot(red_bins_long, aes(x=depth,y=richness))+
+  geom_point(size = 2.5, col = "red") + ggtitle("red sea richness ~ depth (binned)") 
 
 # _______________________________________________________________
 
