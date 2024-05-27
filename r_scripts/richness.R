@@ -34,6 +34,7 @@ wide_opCode = wide_opCode %>% dplyr::select(-X) # rm weird column
 
 #removing samples from Sdot Yam from wide med:
 wide_med <- wide_med[-which(wide_med$OpCode == "isrsdot201119A" | wide_med$OpCode == "isrsdot201119B"),]
+wide_opCode <- wide_opCode[-which(wide_opCode$OpCode == "isrsdot201119A" | wide_opCode$OpCode == "isrsdot201119B"),]
 
 # _______________________________________________________________
 
@@ -269,10 +270,213 @@ ggplot(red_bins_long, aes(x=depth,y=richness))+
 
 # _______________________________________________________________
 
+                # The problem with our plots:
+
+# we still don't know if the diff' between the depth bins richness and abundance arise from sampling effort biases or real ecological reasons
+# to account for it we will create rarefaction plots
+# - Should be done for both binned depth and continuous depth
+
+# _______________________________________________________________
+
+               # individual based rarefaction
+              
+                     # OpCode scale 
+
+# med:
+
+ind_based_rare_all_med = list() # empty list
+
+for (i in 1:nrow(med_depth_bins)) { # for each row...
+  
+  one_opCode = med_depth_bins[i,] # filter
+
+  one_opCode_sp_matrix = one_opCode[,first_species:ncol(one_opCode)] # create sp_matrix
+
+  if(rowSums(one_opCode_sp_matrix > 0)){
+
+  rarefaction = rarefaction.individual(one_opCode_sp_matrix, method = "sample-size", q = 0) # apply rarefaction function
+
+  rarefaction$depth = one_opCode$depth
+  
+  rarefaction$OpCode = one_opCode$OpCode # add the opcode_id to the data
+
+  ind_based_rare_all_med[[i]] = rarefaction } # save in my list
+
+}
+
+ind_based_rare_all_med = bind_rows(ind_based_rare_all_med) # convert from list to data frame
+
+colnames(ind_based_rare_all_med) <- c("Individuals","Richness","Depth_layer", "sample") # change columns names
+
+# -----------
+
+# plot
+ggplot(ind_based_rare_all_med, aes(x=Individuals, y=Richness, group = sample ,color = Depth_layer))+
+  geom_line()
+
+ggplot(ind_based_rare_all_med, aes(x=Individuals, y=Richness, group = sample, color = Depth_layer))+
+  geom_line() +
+  facet_wrap(~Depth_layer)
+
+# _______________________________________________________________
+# _______________________________________________________________
+
+# red:
+ind_based_rare_all_red = list() # empty list
+
+for (i in 1:nrow(red_depth_bins)) { # for each row...
+  
+  one_opCode = red_depth_bins[i,] # filter
+  
+  one_opCode_sp_matrix = one_opCode[,first_species:ncol(one_opCode)] # create sp_matrix
+  
+  if(rowSums(one_opCode_sp_matrix > 0)){
+    
+    rarefaction = rarefaction.individual(one_opCode_sp_matrix, method = "sample-size", q = 0) # apply rarefaction function
+    
+    rarefaction$depth = one_opCode$depth
+    
+    rarefaction$OpCode = one_opCode$OpCode # add the opcode_id to the data
+    
+    ind_based_rare_all_red[[i]] = rarefaction } # save in my list
+  
+}
+
+ind_based_rare_all_red = bind_rows(ind_based_rare_all_red) # convert from list to data frame
+
+colnames(ind_based_rare_all_red) <- c("Individuals","Richness","Depth_layer", "sample") # change columns names
+
+# -----------
+
+# plot
+ggplot(ind_based_rare_all_red, aes(x=Individuals, y=Richness, group = sample ,color = Depth_layer))+
+  geom_line()
+
+ggplot(ind_based_rare_all_red, aes(x=Individuals, y=Richness, group = sample, color = Depth_layer))+
+  geom_line() +
+  facet_wrap(~Depth_layer)
+
+# _______________________________________________________________
+
+             # individual based rarefaction
+
+                  # depth bin scale 
+
+# Now we will sum the total individuals of each species in each `depth bin`. 
+
+# med:
+group_data_med = med_depth_bins %>% 
+  dplyr::select(depth, 7:ncol(med_depth_bins)) %>% 
+  group_by(depth) %>% #this tells R to view the df in terms of groups of depth bins
+  summarize(across(.fns = sum), .groups = "drop") # summarize all other values by summing all the rows in each group. (.groups = "drop" is to ungroup the data after we are done)
+
+group_data_med$order <- 1:8
+
+ind_based_rare_med = list()
+
+for (i in unique(group_data_med$depth)) {
+  
+  one_depth = group_data_med %>% filter(depth == i)
+  
+  depth_sp_matrix = one_depth[,2:ncol(one_depth)]
+  
+  rarefaction = rarefaction.individual(depth_sp_matrix, method = "sample-size", q = 0)
+  
+  rarefaction$depth = i
+  
+  rarefaction$order = one_depth$order
+  
+  ind_based_rare_med[[i]] = rarefaction
+  
+}
+
+ind_based_rare_med = bind_rows(ind_based_rare_med)
+
+colnames(ind_based_rare_med) = c("Individuals","Richness","Depth_bin", "order")
+
+ggplot(ind_based_rare_med, aes(x=Individuals, y=Richness, color = reorder(Depth_bin, order)))+
+  geom_line(size = 1.5)
+
+# _______________________________________________________________
+# _______________________________________________________________
+
+# red:
+
+group_data_red = red_depth_bins %>% 
+  dplyr::select(depth, 7:ncol(red_depth_bins)) %>% 
+  group_by(depth) %>% #this tells R to view the df in terms of groups of depth bins
+  summarize(across(.fns = sum), .groups = "drop") # summarize all other values by summing all the rows in each group. (.groups = "drop" is to ungroup the data after we are done)
+
+group_data_red$order <- 1:8
+
+ind_based_rare_red = list()
+
+for (i in unique(group_data_red$depth)) {
+  
+  one_depth = group_data_red %>% filter(depth == i)
+  
+  depth_sp_matrix = one_depth[,2:ncol(one_depth)]
+  
+  rarefaction = rarefaction.individual(depth_sp_matrix, method = "sample-size", q = 0)
+  
+  rarefaction$depth = i
+  
+  rarefaction$order = one_depth$order
+  
+  ind_based_rare_red[[i]] = rarefaction
+  
+}
+
+ind_based_rare_red = bind_rows(ind_based_rare_red)
+
+colnames(ind_based_rare_red) = c("Individuals","Richness","Depth_bin", "order")
+
+ggplot(ind_based_rare_red, aes(x=Individuals, y=Richness, color = reorder(Depth_bin, order)))+
+  geom_line(size = 1.5)
+
+# _______________________________________________________________
+
+              # individual based rarefaction
+# When we use Sample-based rarefaction we summing up the number of new species that added with each 
+  # new sample and ignoring the number of individuals belonging to each species. 
+    #Therefore we *neutralize the effect of large schools* (herds/flocks etc.) on the rarefaction curve shape.
+# package: rareNMtests
+
+########################################## requires reordering!
+
+sample_based_rare_med = list()
+
+for (i in unique(med_depth_bins$depth)) {
+  
+  one_depth = med_depth_bins %>% filter(depth == i)
+  
+  depth_sp_matrix = one_depth[,first_species:ncol(one_depth)]
+  
+  rarefaction = rarefaction.sample(depth_sp_matrix, method = "sample-size", q = 0)
+  
+  rarefaction$depth = i
+  
+  sample_based_rare_med[[i]] =  rarefaction
+  
+}
+
+sample_based_rare_med = bind_rows(sample_based_rare_med)
+
+colnames(sample_based_rare_med) = c("samples","richness","Depth_bin")
+
+ggplot(sample_based_rare_med, aes(x=samples, y=richness, color = Depth_bin))+geom_line(size = 1.2)
+
+
+# _______________________________________________________________
+# _______________________________________________________________
+
+# med:
+
+
+# _______________________________________________________________
 
 
                      # MOBR package 
-
 
 
 # _______________________________________________________________
@@ -281,7 +485,8 @@ ggplot(red_bins_long, aes(x=depth,y=richness))+
            # between the # samples and # individuals
 
 # ( The MoB methods assume a linear relationship between the number of plots and the number of individuals. 
-#  This function provides a means of verifying the validity of this assumption )
+#  This function provides a means of verifying the ggplot(ind_based_rare_med, aes(x=Individuals, y=Richness, color = reorder(Depth_bin, order)))+
+  geom_line(size = 1.5)lidity of this assumption )
 
 # med:
 plot_N(species_metric_med, n_perm = 1000) # - V - indeed linear relationship
@@ -290,13 +495,12 @@ plot_N(species_metric_red, n_perm = 1000) # - V - indeed linear relationship
 
 # _______________________________________________________________
 
-                    # "mob_in" object 
+                    # mob_in object 
 
 # `comm` = community matrix (only species)
 # `plot_attr` =  the meta-data for each sample (only the groups we want to compare. A character string) and coordinate if we have and want to use them.
-# `coord_names`  = column names of longitude and latitude 
+# `coord_names`  = column names of longitude and latitude  
 
-# -----------
 
             # for discrete \ binned depth groups:
 
@@ -457,39 +661,6 @@ plot(delta_red_b, 'b1')
 #   mutate(abundance = NULL) # remove this column so we will have a fresh start
 # 
 # # -----------
-# 
-#           # new sp_matrix based on the filtered df:
-# sp_matrix_filter = wide_opCode_clean[,first_species:length(wide_opCode_clean)]
-# 
-# # check lowest abundance count now:
-# raremax_n = sp_matrix_filter %>% rowSums(.) %>% min() # = 5
-# 
-# # -----------
-# 
-#             # "rarefy" function (vegan package)
-# 
-# # - *x* = the data frame we will use 
-# # - *sample* = how many individuals to use in the rarefraction.
-# # - We will take the *minimum* number of records in a single site (7)
-# 
-# # species richness in each sample when we sample randomly 5 individuals:
-# rare_index_raremax = rarefy(x=sp_matrix_filter, sample=raremax_n)
-# 
-# # reorder the values in the sea column:
-# wide_opCode_clean$sea <- factor(as.character(wide_opCode_clean$sea), levels=c("red", "med"))
-# 
-# # -----------
-#                       # Bar plot #
-# 
-# # mutate the data by adding a rarefied_richness column, and plot a richness barplot
-# rare_richness_plot <- wide_opCode_clean %>%
-#   mutate(rarefied_richness = rare_index_raremax) %>%
-#   ggplot() + aes(x = sea, y = rarefied_richness, fill = sea) +
-#   stat_summary(geom = "bar",fun.data = mean_se)+
-#   stat_summary(geom = "errorbar", fun.data = mean_se, position = "dodge",width = 0.3)
-# 
-# print(rare_richness_plot) # the red sea has higher richness per sample if we rarefy to 7 individuals
-#  
 # # _______________________________________________________________
 # 
 #      ######################## richness! ##############################
@@ -631,7 +802,16 @@ plot(delta_red_b, 'b1')
 # 
 # 
 # 
+# # y_lim <- max(ind_based_rare_med$Richness) + max(ind_based_rare_med$Richness) * 0.05
+# x_lim <- max(ind_based_rare_med$Individuals) + max(ind_based_rare_med$Individuals) * 0.05
 # 
+# par(mar = c(5,5,1,10))
+# 
+# plot(1, type = 'n', xlab = '', ylab = '',
+#      ylim = c(0, y_lim),
+#      xlim = c(0, x_lim))
+# 
+# lines(ind_based_rare_med$Individuals[], ind_based_rare_med$Richness)
 # 
 # 
 # 
