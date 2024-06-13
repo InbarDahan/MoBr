@@ -19,25 +19,18 @@ library(raster)       # for raster object
 library(RColorBrewer)    # color palettes
 
 # wd:
-wd_processed_data <- "C:/Users/inbar/OneDrive/desktop/r/chapter_2/MoBr/data/processed"
-wd_raw_data <- "C:/Users/inbar/OneDrive/desktop/r/chapter_2/MoBr/data/raw"
+wd_processed_data <- "C:/Users/inbar/OneDrive/desktop/r/chapter_2/MoBr/data/processed" 
 
 # read data:
-# wide: 
 setwd(wd_processed_data)
 wide_med <- read.csv("wide_med.csv")
 wide_red <- read.csv("wide_red.csv")
 wide_opCode <- read.csv("wide_opCode.csv")
 
-#removing the wired column x
-wide_med = wide_med %>% dplyr::select(-X) # rm weird column
-wide_red = wide_red %>% dplyr::select(-X) # rm weird column
-wide_opCode = wide_opCode %>% dplyr::select(-X) # rm weird column
-
-#removing samples from Sdot Yam from wide med:
-wide_med <- wide_med[-which(wide_med$OpCode == "isrsdot201119A" | wide_med$OpCode == "isrsdot201119B"),]
-wide_opCode <- wide_opCode[-which(wide_opCode$OpCode == "isrsdot201119A" | wide_opCode$OpCode == "isrsdot201119B"),]
-
+# removing the wired column x:
+wide_med = wide_med %>% dplyr::select(-X)
+wide_red = wide_red %>% dplyr::select(-X) 
+wide_opCode = wide_opCode %>% dplyr::select(-X) 
 # _______________________________________________________________
 
                 # preliminary exploration #
@@ -123,14 +116,10 @@ max(wide_red_sum$abundance) # 252
 # sum richness:
 min(wide_red_sum$richness) # 1
 max(wide_red_sum$richness) # 42
+
 # _______________________________________________________________
 
-# I noticed I have samples with very low abundances (0, 1, 2...) in the two seas
-# since we are interested in exploring the effect of depth, I wanted to merge samples from the same depth strip 
-# but what should be the width of the bin? 10m? 20m?
-# _______________________________________________________________
-
-               # plot abundance\individuals ~ depth (wide_data)
+           # plot abundance per sample ~ depth (wide_data)
 
 # med - points: 
 ggplot(wide_med_sum,aes(x=depth,y=abundance))+
@@ -150,7 +139,7 @@ ggplot(wide_red_sum,aes(x=depth,y=abundance))+
 
 # -----------
 
-                  # plot richness ~ depth (wide_data)
+           # plot richness per sample ~ depth (wide_data)
 
 # med - points: 
 ggplot(wide_med_sum,aes(x=depth,y=richness))+
@@ -167,6 +156,14 @@ ggplot(wide_red_sum,aes(x=depth,y=richness))+
 # red - line: 
 ggplot(wide_red_sum,aes(x=depth,y=richness))+
   geom_line(size = 1.5, col = "indianred2") + ggtitle("red sea richness ~ depth")
+
+# -----------
+
+# _______________________________________________________________
+
+# I noticed I have samples with very low abundances (0, 1, 2...) in the two seas
+# since we are interested in exploring the effect of depth, I wanted to merge samples from the same depth strip 
+# but what should be the width of the bin? 10m? 20m?
 
 # _______________________________________________________________
 
@@ -213,7 +210,9 @@ red_bins_long <- red_depth_bins %>%   # the df to convert
 
 # _______________________________________________________________
 
-                         # Box plot - abundance
+            # Box plot - abundance over depth layers
+
+      # shows mean and quarters, all samples distribution
 
 # med:
 boxplot(sample_abu~depth,
@@ -238,7 +237,7 @@ boxplot(sample_abu~depth,
 
 # -----------
 
-                      # Bar plot  - abundance
+            # Bar plot  -  mean abundance over depth layers
 
 # blue color ramp:
 fun_color_range_med <- brewer.pal(8, "Blues")
@@ -255,8 +254,9 @@ ggplot(red_bins_long, aes(x = depth, y = sample_abu)) +
 
 # _______________________________________________________________
 
+                     # Box plot - richness 
 
-                     # Box plot - richness
+      # shows mean and quarters, all samples distribution
 
 # med:
 boxplot(sample_r~depth,
@@ -281,7 +281,7 @@ boxplot(sample_r~depth,
 
 # -----------
 
-                   # Bar plot  - richness
+                   # Bar plot - mean richness
 
 ggplot(med_bins_long, aes(x = depth, y = sample_r)) + 
   stat_summary(fun = "mean", geom = "bar",fill = fun_color_range_med, col = "black")+
@@ -290,6 +290,38 @@ ggplot(med_bins_long, aes(x = depth, y = sample_r)) +
 ggplot(red_bins_long, aes(x = depth, y = sample_r)) + 
   stat_summary(fun = "mean", geom = "bar",fill = fun_color_range_red, col = "black")+
   ggtitle("Red: avr rich ~ depth")
+# _______________________________________________________________
+
+     # total richness over each depth range using species identities
+
+#med:
+long_med_bins <- med_depth_bins %>%     # the df to convert
+  dplyr::select(-c(1, 2, 4, 5, 6)) %>%     # columns to remove
+  pivot_longer(cols = !c(depth), names_to = "species", values_to = "count") %>% # transforming to wide
+  filter(!count == 0) %>%               #removing rows with 0 abundance so species will not be counted when they are not present
+  group_by(depth) %>%                   # grouping by depth layer
+  summarise(depth_layer_r = n_distinct(species), layer_abu = sum(count)) # richness per depth bin - no repeated species
+
+#red:
+long_red_bins <- red_depth_bins %>%     # the df to convert
+  dplyr::select(-c(1, 2, 4, 5, 6)) %>%     # columns to remove
+  pivot_longer(cols = !c(depth), names_to = "species", values_to = "count") %>% # transforming to wide
+  filter(!count == 0) %>%               #removing rows with 0 abundance so species will not be counted when they are not present
+  group_by(depth) %>%                   # grouping by depth
+  summarise(depth_layer_r = n_distinct(species), layer_abu = sum(count)) # richness per depth bin - no repeated species
+
+# - - - - - - - - - - - - 
+
+          # Bar plot  - total richness at each depth layers
+
+ggplot(long_med_bins, aes(x = depth, y = depth_layer_r)) + 
+  stat_summary(geom = "bar",fill = fun_color_range_med, col = "black")+
+  ggtitle("Med: total rich ~ depth")
+
+ggplot(long_red_bins, aes(x = depth, y = depth_layer_r)) + 
+  stat_summary(geom = "bar",fill = fun_color_range_red, col = "black")+
+  ggtitle("Red: total rich ~ depth")
+
 # _______________________________________________________________
 
                 # The problem with our plots:
@@ -525,6 +557,12 @@ sample_based_rare_red$Depth_bin = factor(sample_based_rare_red$Depth_bin, levels
 
 ggplot(sample_based_rare_red, aes(x=samples, y=richness, color = Depth_bin))+geom_line(size = 1.2)
 
+
+# _______________________________________________________________
+
+
+# clean environment:
+rm(list=setdiff(ls(), c("red_depth_bins","first_species")))
 
 # _______________________________________________________________
 
