@@ -1,6 +1,6 @@
 
 
-               ###     Fish Richness     ###
+               ###  Fish Richness  and abundance   ###
 
      # Does the fish richness changes across depths layers ?
 
@@ -74,14 +74,16 @@ wide_med_sf <- st_as_sf(wide_med, coords = c('lon_x', 'lat_y'), crs = crs("+proj
 wide_red_sf <- st_as_sf(wide_red, coords = c('lon_x', 'lat_y'), crs = crs("+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0"))
 
 # visualize:
-mapView(wide_med_sf, zcol = "depth")
-mapView(wide_red_sf, zcol = "depth")
+mapView(wide_med_sf, zcol = "depth", legend = TRUE,
+        layer.name = 'Depth')
+mapView(wide_red_sf, zcol = "depth", legend = TRUE,
+        layer.name = 'Depth')
 
 # _______________________________________________________________
 
           # sampling effort at each sea
 
-wide_med_sum_s <- wide_med %>% 
+wide_med_sum <- wide_med %>% 
   mutate(abundance = rowSums(wide_med[,first_species:length(wide_med)])) %>%
   mutate(richness = rowSums(wide_med[, first_species:ncol(wide_med)] > 0)) 
 
@@ -193,46 +195,51 @@ red_depth_bins$depth <- cut(red_depth_bins$depth,
 # I will move to long format and then will group by depth and species and count them:
 
 #med:
-med_bins_long <- med_depth_bins %>%   # the df to convert
-  dplyr::select(-c(2, 4, 5, 6)) %>%  # columns to remove
-  pivot_longer(cols = !c(depth, OpCode), names_to = "species", values_to = "count") %>% # transforming to wide
-  filter(!count == 0) %>%             #removing rows with 0 abundance so species will not be counted when they are not present
-  group_by(depth, OpCode) %>%  # grouping by sea and species
-  summarise(sample_r = n_distinct(species), sample_abu = sum(count)) # richness per depth bin - no repeated species
+med_bins_long <- med_depth_bins %>%                                                      # the df to convert
+  dplyr::select(-c(2, 4, 5, 6)) %>%                                                      # columns to remove
+  pivot_longer(cols = !c(depth, OpCode), names_to = "species", values_to = "count") %>%  # transforming to wide
+  filter(!count == 0) %>%                                                                #removing rows with 0 abundance so species will not be counted when they are not present
+  group_by(depth, OpCode) %>%                                                            # grouping by sea and species
+  summarise(sample_r = n_distinct(species), sample_abu = sum(count))                     # richness per depth bin - no repeated species
   
 #red:
-red_bins_long <- red_depth_bins %>%   # the df to convert
-  dplyr::select(-c(2, 4, 5, 6)) %>%  # columns to remove
-  pivot_longer(cols = !c(depth, OpCode), names_to = "species", values_to = "count") %>% # transforming to wide
-  filter(!count == 0) %>%       #removing rows with 0 abundance so species will not be counted when they are not present
-  group_by(depth, OpCode) %>%                # grouping by sea and species
-  summarise(sample_r = n_distinct(species), sample_abu = sum(count)) # richness per depth bin - no repeated species
+red_bins_long <- red_depth_bins %>%                                                      # the df to convert
+  dplyr::select(-c(2, 4, 5, 6)) %>%                                                      # columns to remove
+  pivot_longer(cols = !c(depth, OpCode), names_to = "species", values_to = "count") %>%  # transforming to wide
+  filter(!count == 0) %>%                                                                #removing rows with 0 abundance so species will not be counted when they are not present
+  group_by(depth, OpCode) %>%                                                            # grouping by sea and species
+  summarise(sample_r = n_distinct(species), sample_abu = sum(count))                     # richness per depth bin - no repeated species
 
 # _______________________________________________________________
 
             # Box plot - abundance over depth layers
 
       # shows mean and quarters, all samples distribution
+                                                                      # charectaristics:
 
-# med:
-boxplot(sample_abu~depth,
-        data=med_bins_long,
-        main= "Boxplot: sample abundance ~ depth",
-        xlab="depth layer",
-        ylab="abundance per sample",
-        col="cyan",
+# med:                                                 # we have outliers (step 1 from zuur 2010)
+boxplot(sample_abu~depth,                              # we do not have homogeneity of variance (step 2 from zuur 2010)
+        data=med_bins_long,                            # we do not have normal distributions (step 3 from zuur 2010)
+        main= "Boxplot: sample abundance ~ depth",     # we have zero inflated data (step 4)
+        xlab="depth layer",                            # if I will add more explanatory variable except depth - I will need to check for co-linearity (the relationship between a few x) (step 5) - for example richness is dependent on abundance
+        ylab="abundance per sample",                   # the relationship between the abu ~ depth is  (step 6 from zuur 2010)
+        col="cyan",                                    # 
         border="black"
 )
-  
-# red:
-boxplot(sample_abu~depth,
-        data=red_bins_long,
-        main= "Boxplot: abundance ~ depth layer",
-        xlab="depth layer",
-        ylab="abundance per sample",
+
+par(mfrow=c(1,1))
+
+# Remark - to add the n samples above the graph
+# red:                                                  # we have outliers (step 1 from zuur 2010)
+boxplot(sample_abu~depth,                               # we do not have homogeneity of variance (step 2 from zuur 2010)
+        data=red_bins_long,                             # we do not have normal distributions (step 3 from zuur 2010)
+        main= "Depth binned abundance",       # we have zero inflated data (step 4)
+        xlab="Depth ranges (m)",                             # if I will add more explanatory variable except depth - I will need to check for co-linearity (the relationship between a few x) (step 5)
+        ylab="Abundance",                    # the relationship between the abu ~ depth is  (step 6 from zuur 2010)
         col="indianred2",
-        border="black"
+        border="black", add = F
 )
+
 
 
 # -----------
@@ -261,9 +268,9 @@ ggplot(red_bins_long, aes(x = depth, y = sample_abu)) +
 # med:
 boxplot(sample_r~depth,
         data=med_bins_long,
-        main="Boxplot: sample richness ~ depth",
-        xlab="depth layer",
-        ylab="richness per sample",
+        main="Richness Across Depth Layers",
+        xlab="Depth layer",
+        ylab="Richness per sample",
         col="cyan",
         border="black"
 )
@@ -271,9 +278,9 @@ boxplot(sample_r~depth,
 # red:
 boxplot(sample_r~depth,
         data=red_bins_long,
-        main="Boxplot: sample richness ~ depth",
-        xlab="depth layer",
-        ylab="richness per sample",
+        main="Richness Across Depth Layers",
+        xlab="Depth layer",
+        ylab="Richness per sample",
         col="indianred2",
         border="black"
 )
@@ -557,6 +564,10 @@ sample_based_rare_red$Depth_bin = factor(sample_based_rare_red$Depth_bin, levels
 
 ggplot(sample_based_rare_red, aes(x=samples, y=richness, color = Depth_bin))+geom_line(size = 1.2)
 
+# _______________________________________________________________
+
+# model for the relationship between richness and depth, accounting for abundance
+
 
 # _______________________________________________________________
 
@@ -569,196 +580,9 @@ rm(list=setdiff(ls(), c("red_depth_bins","first_species")))
 ################################################################
 
 
-
 # - continue Tal's cod
 
 # -  run the spatial sample based rarefaction (understand the 2 mobr approaches)
 
 # - rum the coverage based rarefaction - understand it
-
-
-
-###############################################################
-
-# _______________________________________________________________
-
-
-                     # MOBR package 
-
-
-# _______________________________________________________________
- 
-               # check for linear relationship 
-           # between the # samples and # individuals
-
-# ( The MoB methods assume a linear relationship between the number of plots and the number of individuals. 
-#  This function provides a means of verifying the validity of this assumption )
-
-# med:
-plot_N(species_metric_med, n_perm = 1000) # - V - indeed linear relationship
-# red: 
-plot_N(species_metric_red, n_perm = 1000) # - V - indeed linear relationship
-
-# _______________________________________________________________
-
-                    # mob_in object 
-
-# `comm` = community matrix (only species)
-# `plot_attr` =  the meta-data for each sample (only the groups we want to compare. A character string) and coordinate if we have and want to use them.
-# `coord_names`  = column names of longitude and latitude  
-
-
-            # for discrete \ binned depth groups:
-
-# create env dataset
-env_data_med_b <- med_depth_bins[, c(3, 5, 6)]
-env_data_red_b <- red_depth_bins[, c(3, 5, 6)]
-
-# create the mob_in objects:
-mob_in_med_b <- make_mob_in(species_metric_med, plot_attr = env_data_med_b, coord_names = c("lon_x", "lat_y"))
-mob_in_red_b <- make_mob_in(species_metric_red, plot_attr = env_data_red_b, coord_names = c("lon_x", "lat_y"))
-
-# -----------
-
-                 # for continuous depths
-
-# create env dataset
-env_data_med <- med_matrix_r[, c(3, 5, 6)]
-env_data_red <- med_matrix_r[, c(3, 5, 6)]
-
-# create the mob_in objects:
-mob_in_med <- make_mob_in(species_metric_med, plot_attr = env_data_med, coord_names = c("lon_x", "lat_y"))
-mob_in_red <- make_mob_in(species_metric_red, plot_attr = env_data_red, coord_names = c("lon_x", "lat_y"))
-
-# _______________________________________________________________
- 
-                  # ' get_delta_stats '
-
-# Conduct the MoB tests on drivers of biodiversity across scales: shape of the SAD, treatment\group density - N and aggregations degree:
-
-# -----------
- 
-         # for discrete \ binned depth groups:
-
-# med:
-delta_med_b = get_delta_stats(mob_in = mob_in_med_b, 
-                             env_var = 'depth',
-                             type='discrete', log_scale=FALSE, n_perm = 20)
-
-plot(delta_med_b, 'b1', )
-
-# red:
-delta_red_b = get_delta_stats(mob_in = mob_in_red_b, 
-                            env_var = 'depth',
-                            type='discrete', log_scale=FALSE, n_perm = 20)
-
-plot(delta_red_b, 'b1')
-
-# -----------
-
-              # for continuous depths
-# med:
-delta_med = get_delta_stats(mob_in = mob_in_med, 
-                             env_var = 'depth',
-                             type='continuous', log_scale=FALSE, n_perm = 20)
-
-plot(delta_med_b, 'b1', )
-
-# red:
-delta_red = get_delta_stats(mob_in = mob_in_red, 
-                            env_var = 'depth',
-                            type='continuous', log_scale=FALSE, n_perm = 20)
-
-plot(delta_red_b, 'b1')
-
-
-
-
-
-
-
-#                           #  mobr package  #
-# 
-#     # Creating richness rarefaction curves over treatments and env gradients #  
-# 
-# -----------
-
-
-# delta_med <- get_delta_stats(mob_in_med, mob_in_med$env$depth, ref_level = NULL, tests = c("SAD", "N", "agg"), spat_algo = 'kNN', type = "continuous",
-#                  stats = NULL, inds = NULL, log_scale = FALSE, min_plots = NULL, density_stat = c("mean", "max", "min"), n_perm = 1000, overall_p = FALSE )
-# 
-# delta_red <- get_delta_stats( mob_in, env_var, group_var = NULL, ref_level = NULL, tests = c("SAD", "N", "agg"), spat_algo = NULL, type = c("continuous", "discrete"),
-#                               stats = NULL, inds = NULL, log_scale = FALSE, min_plots = NULL, density_stat = c("mean", "max", "min"), n_perm = 1000, overall_p = FALSE )
-
-
-     # plot rarefaction
-# plot_rarefaction(mob_in_med, group_var = 'depth', ref_level = NULL, method = c('IBR', 'SBR', 'nsSBR', 'sSBR'), pooled = false, spat_algo = 'kNN', col = NULL, lwd = 3, log = "X", leg_loc = "topleft") 
-# 
-# plot_rarefaction(mob_in_med, group_var = 'depth', method = 'IBR', dens_ratio = 1, pooled = TRUE, col = NULL, lwd = 3, log = NULL, leg_loc = "topleft")
-# 
-# 
-# plot_abu(mob_in_med, group_var = mob_in_med$env[1], ref_level = NULL, type = c("sad", "rad"), pooled = FALSE, col = NULL, lwd = 3, log = "", leg_loc = "topleft" )
-# 
-
-
-# # _______________________________________________________________
-
-#  
-# # calc_biodiv - Calculating biodiversity statistics from sites by species table for each sea separately: red and med
-# bio_stat <- calc_biodiv(abund_mat = wide_opCode[,first_species:ncol(wide_opCode)], 
-#                         groups = wide_opCode$sea, 
-#                         index = c("N", "S", "S_n", "S_asymp", "f_0", "pct_rare", "PIE", "S_PIE"), 
-#                         effort = 10, ########################################### change it to something like the min abundance in a sea\ somethinf else that makes sense and is not arbitrary. 
-#                         extrapolate = TRUE, 
-#                         return_NA = FALSE, 
-#                         rare_thres = "N/S")
-# # I can use this table to extract any possible indices I am interested in, for each sea. The indices are calculated per sapmle.
-# 
-# 
-# 
-# # y_lim <- max(ind_based_rare_med$Richness) + max(ind_based_rare_med$Richness) * 0.05
-# x_lim <- max(ind_based_rare_med$Individuals) + max(ind_based_rare_med$Individuals) * 0.05
-# 
-# par(mar = c(5,5,1,10))
-# 
-# plot(1, type = 'n', xlab = '', ylab = '',
-#      ylim = c(0, y_lim),
-#      xlim = c(0, x_lim))
-# 
-# lines(ind_based_rare_med$Individuals[], ind_based_rare_med$Richness)
-
-
-
-
-
-
-
-# next steps:
-
-
-
-# then ask myself what syntax the most complex function in mob r (the one that calculated the difference between the rarefactions) needs
-# correct the rarefaction syntax I used to what is required
-# created the other rarefactions
-
-# and later later I think of adding analysis that are connected to species compositions - although this was done before
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

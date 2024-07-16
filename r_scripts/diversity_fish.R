@@ -2,9 +2,7 @@
 
                   ###  Diversity  ###
 
-   # How does beta diversity changes over depth layers?
-
-        # Is ther a nestedness pattern in the data?
+   # How does beta diversity changes within and among depth layers?
 
 # libraries:
 library(vegan)
@@ -14,7 +12,6 @@ library(betapart)
 
 # _______________________________________________________________
 
-# wd:
 wd_processed_data <- "C:/Users/inbar/OneDrive/desktop/r/chapter_2/MoBr/data/processed"
 
 # read data:
@@ -121,9 +118,10 @@ ggplot(renyi_df_group,aes(x=Q, y=Value, group = depth, color= depth))+
 
 # _______________________________________________________________
 
-             # Pairwise Beta Diversity
+                   # Pairwise Beta Diversity
               
-# Good for analyses of turnover. We will use both abundance and incidence data.
+# This analyses is good to evaluate turnover among samples of the same depth layer
+# We will use both abundance and incidence data
 # Bray-Curtis Dissimilarity Index  - uses abundance data
 # Sorenson (and Simpson), Jaccard - use incidence data
 
@@ -174,80 +172,131 @@ ggplot(bray_scores,aes(x = depth,
 
         # gives less weight to the common species            
 
-sp_matrix_log_2 = decostand(sp_matrix, method = 'log',logbase = 2)
-sp_matrix_log_10 = decostand(sp_matrix, method = 'log',logbase = 10)
+depth_sp_matrix_log_2 = decostand(sp_matrix, method = 'log',logbase = 2)
+depth_sp_matrix_log_10 = decostand(sp_matrix, method = 'log',logbase = 10)
 
 # _______________________________________________________________
 
-habitat_bray_scores_log_10 = list() # create an empty list to store my newly created data
+depth_bray_scores_log_10 = list() # create an empty list to store my newly created data
 
-for (i in unique(wide_day2$habitat)){
+for (i in unique(red_depth_bins$depth)){
   
-  habitat_data = wide_day2 %>% filter(habitat == i) # keep only the observation of sample i
+  depth_data = red_depth_bins %>% filter(depth == i) # keep only the observation of sample i
   
-  habitat_sp_matrix = habitat_data[,first_species:length(habitat_data)] # create species matrix
+  depth_sp_matrix = depth_data[,first_species:length(depth_data)] # create species matrix
   
-  habitat_sp_matrix_log = decostand(habitat_sp_matrix,method = 'log',logbase = 10)
+  depth_sp_matrix_log = decostand(depth_sp_matrix,method = 'log',logbase = 10)
   
-  habitat_bray_part_log = bray.part(habitat_sp_matrix_log) # apply the function that calculate bray Curtis distances 
+  depth_bray_part_log = bray.part(depth_sp_matrix_log) # apply the function that calculate bray Curtis distances 
   
-  habitat_bray_results_log = habitat_bray_part_log[[3]] # keep only the bray Curtis results
+  depth_bray_results_log = depth_bray_part_log[[3]] # keep only the bray Curtis results
   
-  habitat_bray_results_log = as.numeric(habitat_bray_results_log) # convert to numeric object
+  depth_bray_results_log = as.numeric(depth_bray_results_log) # convert to numeric object
   
-  habitat_mean_bray = mean(habitat_bray_results_log) # calculate the mean bray curtis distance
-  habitat_se_bray = std.error(habitat_bray_results_log)# calculate SE
-  habitat_Sample = i # argument with the the name of the site
+  depth_mean_bray = mean(depth_bray_results_log) # calculate the mean bray curtis distance
   
-  habitat_bray_data_log = data.frame(habitat_Sample,habitat_mean_bray,habitat_se_bray) # create data frame that save those variables 
+  depth_se_bray = std.error(depth_bray_results_log)# calculate SE
   
-  habitat_bray_scores_log_10[[i]] = habitat_bray_data_log # save it in my list
+  depth_Sample = i # argument with the the name of the site
+  
+  depth_bray_data_log = data.frame(depth_Sample,depth_mean_bray,depth_se_bray) # create data frame that save those variables 
+  
+  depth_bray_scores_log_10[[i]] = depth_bray_data_log # save it in my list
   
 }
 
-habitat_bray_scores_log_10 = bind_rows(habitat_bray_scores_log_10) # convert from list to data frame
+depth_bray_scores_log_10 = bind_rows(depth_bray_scores_log_10) # convert from list to data frame
 
-# lets plot:
 
-ggplot(habitat_bray_scores_log_10,aes(x = habitat_Sample,
-                                      y = habitat_mean_bray,
-                                      color = habitat_Sample)) +
+#lets plot with transformation - reducing the effect of common species:
+
+depth_bray_scores_log_10$depth_Sample = factor(depth_bray_scores_log_10$depth_Sample, levels = c('0-20', '21-40', '41-60', '61-80', '81-100', '101-120', '121-140', '141-149'))
+
+ggplot(depth_bray_scores_log_10,aes(x = depth_Sample,
+                                      y = depth_mean_bray,
+                                      color = depth_Sample)) +
   geom_point(size = 4)+
-  geom_errorbar(aes(ymin= habitat_mean_bray - habitat_se_bray,
-                    ymax= habitat_mean_bray + habitat_se_bray),size =1.2,width = 0.2)+
-  ggtitle("habitat_log 10 - data transformation")
+  geom_errorbar(aes(ymin= depth_mean_bray - depth_se_bray,
+                    ymax= depth_mean_bray + depth_se_bray),size =1.2,width = 0.2)+
+  ggtitle("depth_log 10 - data transformation")
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
 # and compare to the results without transformation:
 
-ggplot(habitat_bray_scores,aes(x = habitat_Sample,
-                               y = habitat_mean_bray,
-                               color = habitat_Sample)) +
+bray_scores$depth = factor(bray_scores$depth, levels = c('0-20', '21-40', '41-60', '61-80', '81-100', '101-120', '121-140', '141-149'))
+
+ggplot(bray_scores,aes(x = depth,
+                       y = mean_bray,
+                       color = depth)) +
   geom_point(size = 4)+
-  geom_errorbar(aes(ymin= habitat_mean_bray - habitat_se_bray,
-                    ymax= habitat_mean_bray + habitat_se_bray),size =1.2,width = 0.2)+
-  ggtitle("habitat_No data transformation")
+  geom_errorbar(aes(ymin= mean_bray - se_bray,
+                    ymax= mean_bray + se_bray),size =1.2,width = 0.2)+
+  ggtitle("depth_No data transformation")
 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# not too big of a diff between log and un_logged - the common species don't affect that much
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
+# cleaning the environment:
+rm(list=setdiff(ls(), c("red_depth_bins","first_species","sp_matrix")))
 
+# _______________________________________________________________
 
+         # Different Components of Beta Diversity
+  # Nestedness and turnover - analyses on incidence data
 
+# We get 3 distance matrixes in one list using 'beta.pair':
+# 1. The distance which is due to species *turnover* between sites - b_sim
+# 2. The distance which is due to species *nestedness* between sites - b_nes
+# 3. The total distance (*nestedness + turnonver*) - b_sor 
 
+beta_pair_data = list()
 
+for (i in unique(red_depth_bins$depth)){
+  
+  one_sample = red_depth_bins %>% filter(depth == i)
+  
+  one_sample_sp_matrix = one_sample[,7:length(one_sample)] # keep only species data  
+  
+  one_sample_incidence = one_sample_sp_matrix %>% replace(one_sample_sp_matrix > 0, 1) # convert to presence-absence data
+  
+  one_sample_beta_pairs = beta.pair(one_sample_incidence) # calculate the beta values
+  
+  one_sample_beta_pairs = bind_cols(one_sample_beta_pairs) # tie the list element toghter
+  
+  one_sample_beta_pairs$depth <- rep(i) # add site
+  
+  one_sample_beta_pairs = as.data.frame(one_sample_beta_pairs) # convert to data frame 
+  
+  one_sample_beta_pairs$beta.sim = as.numeric(one_sample_beta_pairs$beta.sim) # change from distance object to numeric
+  one_sample_beta_pairs$beta.sne = as.numeric(one_sample_beta_pairs$beta.sne)
+  one_sample_beta_pairs$beta.sor = as.numeric(one_sample_beta_pairs$beta.sor)
+  
+  beta_pair_data[[i]] = one_sample_beta_pairs # save to list
+  
+}
 
+beta_pair_data = bind_rows(beta_pair_data) # convert list to data frame
 
+beta_pair_data = gather(beta_pair_data,"component","beta",1:3) # long format
 
+beta_pair_data = beta_pair_data %>% filter(component != "beta.sor")  # filter beta.sor (sum of sim and sne) 
 
+# plot:
 
+beta_pair_data$depth = factor(beta_pair_data$depth, levels = c('0-20', '21-40', '41-60', '61-80', '81-100', '101-120', '121-140', '141-149'))
 
-
-
-
-
-
-
-
-
-
+ggplot(beta_pair_data)+
+  aes(x=depth,y=beta,fill=component)+
+  stat_summary(geom = "bar",fun.data = mean_se)+
+  stat_summary(geom = "errorbar",fun.data = mean_se,width = 0.3)+
+  ylab(expression(paste(beta,"-diversity")))
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# I think - We can see what causes the differences among samples in each depth layer
+# red is the turnover - change in species among samples
+# blue is the nestedness 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
 
 
