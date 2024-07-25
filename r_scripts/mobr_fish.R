@@ -35,6 +35,7 @@ library(broom)
 # wd
 wd_processed_data <- "C:/Users/inbar/OneDrive/desktop/r/chapter_2/MoBr/data/processed" 
 wd_plots <- "C:/Users/inbar/OneDrive/desktop/r/chapter_2/MoBr/output/plots"
+wd_results <- "C:/Users/inbar/OneDrive/desktop/r/chapter_2/MoBr/output/files"
 
 # read data
 setwd(wd_processed_data)
@@ -56,19 +57,13 @@ sp_matric <- wide_red[,first_species:length(wide_red)]
 #if binned data required:
 red_depth_bins <- wide_red
 
-# 8.1 - 149 m to - 20 m bins (8 layers)
-# red_depth_bins$depth <- cut(red_depth_bins$depth,                                         
-#                             breaks=c(0, 20, 40, 60, 80, 100, 120, 140, 149),
-#                             labels=c('0-20', '21-40', '41-60', '61-80', '81-100', '101-120', '121-140', '141-149'))
-
-
 # 8.1 - 149 m to - 15 m bins (8 layers)
-red_depth_bins$depth <- cut(red_depth_bins$depth,                                         
+red_depth_bins <-  wide_red %>% mutate(depth_group = cut(wide_red$depth,                                         
                             breaks=c(0, 15, 30, 45, 60, 75, 90, 105, 120, 135, 149),
-                            labels=c('0-15', '16-30', '31-45', '46-60', '61-75','76-90', '91-105', '106-120', '121-135', '136-149'))
+                            labels=c('0-15', '16-30', '31-45', '46-60', '61-75','76-90', '91-105', '106-120', '121-135', '136-149')))
 
 # create env var
-env_red_b <- red_depth_bins[, c(1, 3:6)]
+env_red_b <- red_depth_bins[, c(1, 3:6, 180)]
 
 # -----------------------------------------------------------------------------
 
@@ -85,28 +80,56 @@ red_bin_mob_in <- make_mob_in(sp_matric, env_red_b, # define the sp matrix and t
 
 # binned:
  # here the α and γ scales are different. One sample vs depth bin
-stats_b <- get_mob_stats(red_bin_mob_in, group_var = "depth", effort_min = 10, extrapolate = FALSE) 
+stats_b <- get_mob_stats(red_bin_mob_in, group_var = "depth_group", extrapolate = FALSE) 
 
 plot(stats_b)
 
-# -----------------------------------------------------------------------------
+# Multiple graphs the binned depths var. It seems like there is a decrease in abundance and richness with depth.
+# but not in rarefied richness. Scale dependent.
 
-# The output is multiple graphs the binned depths var. 
-  # it seems like there is a decrease in abundance and richness with depth.
-                   # but not in rarefied richness
+#______________________________________________________________________________
 
-# -----------------------------------------------------------------------------
+#                  Multiscale analysis - continuous 
+#                       N, SAD and aggregations
+#______________________________________________________________________________
 
-                # calculate biodiversity statistics: 
+                        # ' get_delta_stats '
 
-biodiv <- calc_biodiv(sp_matric, groups = "depth", index = c('S', 'S_n', 'S_asymp', 'f_0', 'PIE', 'S_PIE'), effort = 10, extrapolate = TRUE, return_NA =  FALSE) 
+# Conduct the MoB tests on drivers of biodiversity across scales: 
+# shape of the SAD, treatment\group density (N) and aggregations degree:
 
+# red:
+delta_red = get_delta_stats(mob_in = red_bin_mob_in, env_var = 'depth',  # define the env gradient
+                            group_var = 'depth_group', stats = c('betas', 'r'), # define the site\grouping var
+                            type = 'continuous', spat_algo = 'kNCN', # define the type of var # define the spatial rarefaction method
+                            n_perm = 100, overall_p = FALSE) # 
 
+plot(delta_red, stat = 'b1', scale_by = 'indiv',
+     eff_sub_effort = F, eff_log_base = 2,
+     eff_disp_pts = F,
+     eff_disp_smooth = T)
 
+plot(delta_red, stat = 'b1') 
 
-# -----------------------------------------------------------------------------
+setwd(wd_results)
+save(delta_red, file = 'deltas_red.Rdata')
 
-                     # create the α and γ data-sets 
+# (1) richness over depth - there is no clear gradient. Some very deep depths have high richness, Yet shallow is the highest.
+# (2.a) agg over depth - agg has strong negative effect in intermediate to deep depths (60-90 m), meaning there are more agg that reduce the richness
+# (2.b)  N over depth  - N counter-reflects the agg effect - it has a positive effect (60-90 m) meaning that more individuals in the deep support higher richness
+# (2.c) SAD over depth - has positive effect all throughout, with a bit higher effect in the same depths (60-90 m). The evenness of the community support richness in the same way across depths
+# (3.a) agg over scale - as scale increase, the negative effect of agg increase
+# (3.b)   N over scale - as scale increase, the positive effect of N increase
+# (3.c) SAD over scale - as scale increase, SAD starts to gain negative effect, but just from 30 ind
+
+# summary - there are changes in the behavior of different underlying components on richness over the depth gradient
+#           the components are also influenced by scale.
+
+#______________________________________________________________________________
+
+                    # 2 scale analysis - continuous
+                             # alpha + delta
+#______________________________________________________________________________
 
 # binned:
 alphas_b <- stats_b$samples_stats
@@ -114,11 +137,8 @@ alphas_b <- stats_b$samples_stats
 gammas_b <- stats_b$groups_stats  
 
 # -----------------------------------------------------------------------------
- 
- # ???????????????????? - what did I calculate? ???????????????????????????????
 
                            # fit linear models 
-
 # binned
 lm_alpha_b = alphas_b %>% group_by(index, effort) %>%
   do(mod_b = lm(value ~ group, data = .))
@@ -129,7 +149,6 @@ lm_gamma_b = gammas_b %>% group_by(index, effort) %>%
 # -----------------------------------------------------------------------------
 
                             # get model coefs
-
 # binned
 mod_coef_alpha_b = broom::tidy(lm_alpha_b, mod_b)
 mod_coef_gamma_b = broom::tidy(lm_gamma_b, mod_b)
@@ -137,7 +156,6 @@ mod_coef_gamma_b = broom::tidy(lm_gamma_b, mod_b)
 # -----------------------------------------------------------------------------
 
                            # get model summary
-
 # binned
 mod_sum_alpha_b = broom::glance(lm_alpha_b, mod)
 mod_sum_gamma_b = broom::glance(lm_gamma_b, mod)
@@ -145,7 +163,6 @@ mod_sum_gamma_b = broom::glance(lm_gamma_b, mod)
 # -----------------------------------------------------------------------------
 
                       # binding the α and γ data stats
-
 # binned
 mob_met_b = rbind(data.frame(scale = 'alpha', alphas_b),
                   data.frame(scale = 'gamma', gammas_b))
@@ -153,7 +170,6 @@ mob_met_b = rbind(data.frame(scale = 'alpha', alphas_b),
 # -----------------------------------------------------------------------------
 
                  # reordering the levels of the "index" column
-
 # binned
 mob_met_b$index = factor(mob_met_b$index, 
                          levels = levels(mob_met_b$index)[c(2:1, 3:7)])
@@ -161,7 +177,6 @@ mob_met_b$index = factor(mob_met_b$index,
 # -----------------------------------------------------------------------------
 
            # plotting the effect of depth on total abundance
-
 # binned
 colnames(mob_met_b)[colnames(mob_met_b) == "group"] <- "depth"
 
@@ -228,13 +243,10 @@ ggsave("ENS.pdf", plot = g_b, path = wd_plots, width = 20, height = 15, units = 
 
                 # ?????????????????????????? # 
 
- # the graphs work but something is very very wierd with them. Try to find the 
+ # the graphs work but something is very very weird with them. Try to find the 
  # problem
   
-###############################################################################  
-  
 
-## continuous analysis ------------------
 
   
   
@@ -245,7 +257,12 @@ ggsave("ENS.pdf", plot = g_b, path = wd_plots, width = 20, height = 15, units = 
   
   
   
-  
+
+# calculate biodiversity statistics: 
+
+biodiv <- calc_biodiv(sp_matric, groups = "depth", index = c('N', 'S', 'S_n', 'S_PIE'), effort = 5, extrapolate = FALSE, return_NA =  FALSE) 
+
+# ----------------------------------------------------------------------------- 
   
   
   
@@ -265,14 +282,10 @@ ggsave("ENS.pdf", plot = g_b, path = wd_plots, width = 20, height = 15, units = 
 
 # (The MoB methods assume a linear relationship between the number of plots (samples\opcode) and the number of individuals. 
 # This function provides a mean of verifying the validity of this assumption )
-# med:
-plot_N(species_metric_med, n_perm = 1000) # - V - indeed linear relationship
 # red: 
 plot_N(species_metric_red, n_perm = 1000) # - V - indeed linear relationship
 
 # ***************************************************************
-
-# red - for each depth layer  - V 
 
 # red:
 
@@ -294,69 +307,8 @@ for (i in unique(red_depth_bins$depth)) {
 # `plot_attr` =  the meta-data for each sample (only the groups we want to compare. A character string) and coordinate if we have and want to use them.
 # `coord_names`  = column names of longitude and latitude  
 
-
-# for discrete \ binned depth groups:
-
-# create env dataset
-#env_data_med_b <- med_depth_bins[, c(3, 5, 6)]
-env_data_red_b <- red_depth_bins[, c(3, 5, 6)]
-
-# create the mob_in objects:
-#mob_in_med_b <- make_mob_in(species_metric_med, plot_attr = env_data_med_b, coord_names = c("lon_x", "lat_y"))
-mob_in_red_b <- make_mob_in(species_metric_red, plot_attr = env_data_red_b, coord_names = c("lon_x", "lat_y"))
-
-# -----------
-
-# for continuous depths
-
-# create env dataset
-env_data_med <- med_matrix_r[, c(3, 5, 6)]
-env_data_red <- med_matrix_r[, c(3, 5, 6)]
-
-# create the mob_in objects:
-mob_in_med <- make_mob_in(species_metric_med, plot_attr = env_data_med, coord_names = c("lon_x", "lat_y"))
-mob_in_red <- make_mob_in(species_metric_red, plot_attr = env_data_red, coord_names = c("lon_x", "lat_y"))
-
 # _______________________________________________________________
 
-# ' get_delta_stats '
-
-# Conduct the MoB tests on drivers of biodiversity across scales: shape of the SAD, treatment\group density - N and aggregations degree:
-
-# -----------
-
-# for discrete \ binned depth groups:
-
-# med:
-delta_med_b = get_delta_stats(mob_in = mob_in_med_b, 
-                              env_var = 'depth',
-                              type='discrete', log_scale=FALSE, n_perm = 20)
-
-plot(delta_med_b, 'b1', )
-
-# red:
-delta_red_b = get_delta_stats(mob_in = mob_in_red_b, 
-                              env_var = 'depth',
-                              type='discrete', log_scale=FALSE, n_perm = 20)
-
-plot(delta_red_b, 'b1')
-
-# -----------
-
-# for continuous depths
-# med:
-delta_med = get_delta_stats(mob_in = mob_in_med, 
-                            env_var = 'depth',
-                            type='continuous', log_scale=FALSE, n_perm = 20)
-
-plot(delta_med_b, 'b1', )
-
-# red:
-delta_red = get_delta_stats(mob_in = mob_in_red, 
-                            env_var = 'depth',
-                            type='continuous', log_scale=FALSE, n_perm = 20)
-
-plot(delta_red_b, 'b1')
 
 
 

@@ -64,7 +64,7 @@ range(wide_red$depth, na.rm=TRUE) # 8.1 - 149 m
 wide_red %>% 
   ggplot()+
   aes(x = depth)+
-  geom_histogram() + ggtitle("red sea - samples count at each depth")  # most of the depths have 3-5 observations\opcodes
+  geom_histogram(bins = 6) + ggtitle("red sea - samples count at each depth")  # most of the depths have 3-5 observations\opcodes
 
 # _______________________________________________________________
 
@@ -159,8 +159,6 @@ ggplot(wide_red_sum,aes(x=depth,y=richness))+
 ggplot(wide_red_sum,aes(x=depth,y=richness))+
   geom_line(size = 1.5, col = "indianred2") + ggtitle("red sea richness ~ depth")
 
-# -----------
-
 # _______________________________________________________________
 
 # I noticed I have samples with very low abundances (0, 1, 2...) in the two seas
@@ -182,10 +180,15 @@ med_depth_bins$depth <- cut(med_depth_bins$depth,
                        breaks=c(0, 20, 40, 60, 80, 100, 120, 140, 147),
                        labels=c('0-20', '21-40', '41-60', '61-80', '81-100', '101-120', '121-140', '141-147'))
 
-# 8.1 - 149 m to 8 layers
+# 15 meters bins:
 red_depth_bins$depth <- cut(red_depth_bins$depth,                                         
-                       breaks=c(0, 20, 40, 60, 80, 100, 120, 140, 149),
-                       labels=c('0-20', '21-40', '41-60', '61-80', '81-100', '101-120', '121-140', '141-149'))
+                            breaks=c(0, 15, 30, 45, 60, 75, 90, 105, 120, 135, 149),
+                            labels=c('0-15', '16-30', '31-45', '46-60', '61-75','76-90', '91-105', '106-120', '121-135', '136-149'))
+
+# 20 meters bins - 8.1 - 149 m to 8 layers
+# red_depth_bins$depth <- cut(red_depth_bins$depth,                                         
+#                        breaks=c(0, 20, 40, 60, 80, 100, 120, 140, 149),
+#                        labels=c('0-20', '21-40', '41-60', '61-80', '81-100', '101-120', '121-140', '141-149'))
 
 # _______________________________________________________________
 
@@ -248,16 +251,15 @@ boxplot(sample_abu~depth,                               # we do not have homogen
 
 # blue color ramp:
 fun_color_range_med <- brewer.pal(8, "Blues")
-fun_color_range_red <- brewer.pal(8, "Reds")
+fun_color_range_red <- brewer.pal(8, "Reds") # doensn't work for more than 9
 
 ggplot(med_bins_long, aes(x = depth, y = sample_abu)) + 
   stat_summary(fun = "mean", geom = "bar",fill = fun_color_range_med, col = "black")+
   ggtitle("Med: avr abu ~ depth")
 
 ggplot(red_bins_long, aes(x = depth, y = sample_abu)) + 
-  stat_summary(fun = "mean", geom = "bar",fill = fun_color_range_red, col = "black")+
+  stat_summary(fun = "mean", geom = "bar", col = "black")+
   ggtitle("Red: avr abu ~ depth")
-
 
 # _______________________________________________________________
 
@@ -295,7 +297,7 @@ ggplot(med_bins_long, aes(x = depth, y = sample_r)) +
   ggtitle("Med: avr rich ~ depth")
 
 ggplot(red_bins_long, aes(x = depth, y = sample_r)) + 
-  stat_summary(fun = "mean", geom = "bar",fill = fun_color_range_red, col = "black")+
+  stat_summary(fun = "mean", geom = "bar", col = "black")+
   ggtitle("Red: avr rich ~ depth")
 # _______________________________________________________________
 
@@ -311,11 +313,11 @@ long_med_bins <- med_depth_bins %>%     # the df to convert
 
 #red:
 long_red_bins <- red_depth_bins %>%     # the df to convert
-  dplyr::select(-c(1, 2, 4, 5, 6)) %>%     # columns to remove
-  pivot_longer(cols = !c(depth), names_to = "species", values_to = "count") %>% # transforming to wide
+  dplyr::select(-c(2, 4, 5, 6)) %>%     # columns to remove
+  pivot_longer(cols = !c(OpCode, depth), names_to = "species", values_to = "count") %>% # transforming to wide
   filter(!count == 0) %>%               #removing rows with 0 abundance so species will not be counted when they are not present
   group_by(depth) %>%                   # grouping by depth
-  summarise(depth_layer_r = n_distinct(species), layer_abu = sum(count)) # richness per depth bin - no repeated species
+  summarise(depth_layer_r = n_distinct(species), layer_abu = sum(count), sample = n_distinct(OpCode)) # richness per depth bin - no repeated species
 
 # - - - - - - - - - - - - 
 
@@ -326,7 +328,7 @@ ggplot(long_med_bins, aes(x = depth, y = depth_layer_r)) +
   ggtitle("Med: total rich ~ depth")
 
 ggplot(long_red_bins, aes(x = depth, y = depth_layer_r)) + 
-  stat_summary(geom = "bar",fill = fun_color_range_red, col = "black")+
+  stat_summary(geom = "bar",col = "black")+
   ggtitle("Red: total rich ~ depth")
 
 # _______________________________________________________________
