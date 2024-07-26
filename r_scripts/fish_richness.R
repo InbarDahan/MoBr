@@ -1,6 +1,6 @@
 
 
-               ###  Fish Richness  and abundance   ###
+               ###  Fish Richness and abundance   ###
 
      # Does the fish richness changes across depths layers ?
 

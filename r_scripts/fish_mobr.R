@@ -1,13 +1,12 @@
 
     
-                           ###  MOBr - fish   ###
+                 ###  MOBr - fish (here marked as f) ###
 
 # what drivers shape the change in fish richness over the depth gradient ?
 
 # -----------------------------------------------------------------------------
 
-
-                          # codes from the papers:
+                        # codes from the papers:
 
 # discrete explanatory variables:
 # "Measurement of Biodiversity (MoB): A method to separate the scale-dependent effects of species abundance distribution, density, and aggregation on diversity change"
@@ -16,7 +15,6 @@
 # "A multiscale framework for disentangling the roles of evenness, density, and aggregation on diversity gradients"
 
                     #' @author Dan McGlinn and Xiao Xiao
-                    
 
 # -----------------------------------------------------------------------------
 install.packages(c('devtools', 'mobr', 'leaflet', 'mapview', 'tidyr',
@@ -46,7 +44,7 @@ wide_red = wide_red %>% dplyr::select(-X)
 
 # -----------------------------------------------------------------------------
 
-                       # prepare the data
+                            # prepare the data
 
 # define the first column of species
 first_species <- 7
@@ -59,20 +57,18 @@ red_depth_bins <- wide_red
 
 # 8.1 - 149 m to - 15 m bins (8 layers)
 red_depth_bins <-  wide_red %>% mutate(depth_group = cut(wide_red$depth,                                         
-                            breaks=c(0, 15, 30, 45, 60, 75, 90, 105, 120, 135, 149),
-                            labels=c('0-15', '16-30', '31-45', '46-60', '61-75','76-90', '91-105', '106-120', '121-135', '136-149')))
-
-# create env var
-env_red_b <- red_depth_bins[, c(1, 3:6, 180)]
+                   breaks=c(0, 15, 30, 45, 60, 75, 90, 105, 120, 135, 149),
+                   labels=c('0-15', '16-30', '31-45', '46-60', '61-75','76-90', '91-105', '106-120', '121-135', '136-149')))
 
 # -----------------------------------------------------------------------------
 
-                     # make the "mob in" object
+                       # make the "mob in" object
+# create env var
+env_red <- red_depth_bins[, c(1, 3:6, 180)]
 
-# binned
-red_bin_mob_in <- make_mob_in(sp_matric, env_red_b, # define the sp matrix and the variables
+# make mob in
+red_bin_mob_in <- make_mob_in(sp_matric, env_red, # define the sp matrix and the variables   # no wornings apear - v
                           coord_names = c('lon_x', 'lat_y'))   # define coor
-# no warnings appear - we answer the assumptions required!
 
 # -----------------------------------------------------------------------------
 
@@ -80,16 +76,16 @@ red_bin_mob_in <- make_mob_in(sp_matric, env_red_b, # define the sp matrix and t
 
 # binned:
  # here the α and γ scales are different. One sample vs depth bin
-stats_b <- get_mob_stats(red_bin_mob_in, group_var = "depth_group", extrapolate = FALSE) 
+stats_f <- get_mob_stats(red_bin_mob_in, group_var = "depth_group", extrapolate = FALSE) 
 
-plot(stats_b)
+plot(stats_f)
 
-# Multiple graphs the binned depths var. It seems like there is a decrease in abundance and richness with depth.
+# the output is multiple graphs for the binned depths var. It seems like there is a decrease in abundance and richness with depth.
 # but not in rarefied richness. Scale dependent.
 
 #______________________________________________________________________________
 
-#                  Multiscale analysis - continuous 
+#                  Multi-scale analysis -  gradient
 #                       N, SAD and aggregations
 #______________________________________________________________________________
 
@@ -104,16 +100,15 @@ delta_red = get_delta_stats(mob_in = red_bin_mob_in, env_var = 'depth',  # defin
                             type = 'continuous', spat_algo = 'kNCN', # define the type of var # define the spatial rarefaction method
                             n_perm = 100, overall_p = FALSE) # 
 
-plot(delta_red, stat = 'b1', scale_by = 'indiv',
-     eff_sub_effort = F, eff_log_base = 2,
-     eff_disp_pts = F,
-     eff_disp_smooth = T)
-
-plot(delta_red, stat = 'b1') 
+plot(delta_red, stat = 'b1', scale_by = 'indiv',    # stat can be changed based on the wanted effect size method 
+     eff_sub_effort = F, eff_log_base = 2,          # subset\all samples   #   
+     eff_disp_pts = T,                              # T\P - show the raw effect points
+     eff_disp_smooth = T)                           # T\F - show the linear effect of the expl var on the effect sizes
 
 setwd(wd_results)
 save(delta_red, file = 'deltas_red.Rdata')
 
+#  Insights on the graphs:
 # (1) richness over depth - there is no clear gradient. Some very deep depths have high richness, Yet shallow is the highest.
 # (2.a) agg over depth - agg has strong negative effect in intermediate to deep depths (60-90 m), meaning there are more agg that reduce the richness
 # (2.b)  N over depth  - N counter-reflects the agg effect - it has a positive effect (60-90 m) meaning that more individuals in the deep support higher richness
@@ -128,74 +123,78 @@ save(delta_red, file = 'deltas_red.Rdata')
 #______________________________________________________________________________
 
                     # 2 scale analysis - continuous
-                             # alpha + delta
+                                # α and γ
 #______________________________________________________________________________
 
-# binned:
-alphas_b <- stats_b$samples_stats
-# alphas_b$OpCode <- red_depth_bins$OpCode[match(row.names(alphas_b), row.names(red_depth_bins))]
-gammas_b <- stats_b$groups_stats  
+                       # extract α and γ data
+ 
+alphas_f <- stats_f$samples_stats
+alphas_f$depth <- red_depth_bins$depth[match(alphas_f$group, red_depth_bins$depth_group)]
+
+gammas_f <- stats_f$groups_stats  
+gammas_f$depth <- red_depth_bins$depth[match(gammas_f$group, red_depth_bins$depth_group)]
 
 # -----------------------------------------------------------------------------
 
-                           # fit linear models 
+                        # fit linear models 
+
+lm_alpha_f = alphas_f %>% group_by(index, effort) %>%
+  do(mod_f = lm(value ~ depth, data = .))
+
+lm_gamma_f = gammas_f %>% group_by(index, effort) %>%
+  do(mod_f = lm(value ~ depth, data = .))
+
+# -----------------------------------------------------------------------------
+
+                        # get model coefs
+
+mod_coef_alpha_f= broom::tidy(lm_alpha_f, mod_f)
+mod_coef_gamma_f= broom::tidy(lm_gamma_f, mod_f)
+
+# -----------------------------------------------------------------------------
+
+                      # get model summary
+
+mod_sum_alpha_f= broom::glance(lm_alpha_f, mod_f)
+mod_sum_gamma_f= broom::glance(lm_gamma_f, mod_f)
+
+# -----------------------------------------------------------------------------
+
+                  # binding the α and γ data stats
+
+mob_met_f = rbind(data.frame(scale = 'alpha', alphas_f),
+                  data.frame(scale = 'gamma', gammas_f))
+
+# -----------------------------------------------------------------------------
+
+             # reordering the levels of the "index" column
 # binned
-lm_alpha_b = alphas_b %>% group_by(index, effort) %>%
-  do(mod_b = lm(value ~ group, data = .))
-
-lm_gamma_b = gammas_b %>% group_by(index, effort) %>%
-  do(mod_b = lm(value ~ group, data = .))
+mob_met_f$index = factor(mob_met_f$index, 
+                         levels = levels(mob_met_f$index)[c(2:1, 3:7)])
 
 # -----------------------------------------------------------------------------
 
-                            # get model coefs
-# binned
-mod_coef_alpha_b = broom::tidy(lm_alpha_b, mod_b)
-mod_coef_gamma_b = broom::tidy(lm_gamma_b, mod_b)
-
-# -----------------------------------------------------------------------------
-
-                           # get model summary
-# binned
-mod_sum_alpha_b = broom::glance(lm_alpha_b, mod)
-mod_sum_gamma_b = broom::glance(lm_gamma_b, mod)
-
-# -----------------------------------------------------------------------------
-
-                      # binding the α and γ data stats
-# binned
-mob_met_b = rbind(data.frame(scale = 'alpha', alphas_b),
-                  data.frame(scale = 'gamma', gammas_b))
-
-# -----------------------------------------------------------------------------
-
-                 # reordering the levels of the "index" column
-# binned
-mob_met_b$index = factor(mob_met_b$index, 
-                         levels = levels(mob_met_b$index)[c(2:1, 3:7)])
-
-# -----------------------------------------------------------------------------
+colnames(mob_met_f)[colnames(mob_met_f) == "group"] <- "depth_group"
 
            # plotting the effect of depth on total abundance
-# binned
-colnames(mob_met_b)[colnames(mob_met_b) == "group"] <- "depth"
+                            # α and γ
 
-  N1_b = mob_met_b %>%
+N_f = mob_met_f %>%
     subset(index %in% 'N') %>%
     ggplot(aes(x = depth, y = value)) + 
     geom_point(aes(color = scale)) +
     geom_smooth(aes(color = scale), method = 'lm', se = F) +
-    labs(x = "binned depth (m)", y = "Total abundance (N)")
+    labs(x = "depth (m)", y = "Total abundance (N)")
 
-  ggsave("binned_grad_vs_N.pdf", plot = N1_b, path = wd_plots, width = 15, height = 12, 
+  ggsave("fish_grad_vs_N.pdf", plot = N_f, path = wd_plots, width = 15, height = 12, 
          units = "cm")
 
 # -----------------------------------------------------------------------------
   
-     # plotting the effect of depth on α scale abundance & richness
+     # plotting the effect of depth on abundance & richness 
+                           # α scale
 
-# binned  
-  SN1_b = mob_met_b %>% 
+SN1_f = mob_met_f%>% 
     subset(index %in% c('S', 'N')) %>%
     subset(scale == 'alpha') %>%
     ggplot(aes(x = depth, y = value )) + 
@@ -204,17 +203,33 @@ colnames(mob_met_b)[colnames(mob_met_b) == "group"] <- "depth"
     facet_wrap(~ index, scales = "free",  
                labeller = as_labeller(c(S = "α Species richness (α S)",
                                         N = "α Total abundance (α N)"))) +
-                                        labs(x = "binned_depth (m)")
+                                        labs(x = "depth (m)")
   
- ggsave("binned_grad_vs_S&N.pdf", plot = SN1_b, path = wd_plots, width = 15, height = 12, 
+ ggsave("fish_grad_alpha_vs_S&N.pdf", plot = SN1_f, path = wd_plots, width = 15, height = 12, 
+        units = "cm")
+ 
+ # ------
+                          # γ scale
+ 
+ SN_f = mob_met_f%>% 
+   subset(index %in% c('S', 'N')) %>%
+   subset(scale == 'gamma') %>%
+   ggplot(aes(x = depth, y = value )) + 
+   geom_point(col = "indianred2") +
+   geom_smooth(method = 'lm', se = T) +
+   facet_wrap(~ index, scales = "free",  
+              labeller = as_labeller(c(S = "γ Species richness (γ S)",
+                                       N = "γ Total abundance (γ N)"))) +
+   labs(x = "depth (m)")
+ 
+ ggsave("fish_grad_gamma_vs_S&N.pdf", plot = SN_f, path = wd_plots, width = 15, height = 12, 
         units = "cm")
 
 # -----------------------------------------------------------------------------
 
       # plotting the effect of depth on 'S', 'S_n', 'S_PIE'
 
- # binned 
- p1_b = mob_met_b %>% 
+ p_f = mob_met_f %>% 
    subset(abs(value) < 1000) %>%
    subset(index %in% c('S', 'S_n', 'S_PIE')) %>% 
    ggplot(aes(x = depth, y = value, col = scale)) + 
@@ -222,12 +237,15 @@ colnames(mob_met_b)[colnames(mob_met_b) == "group"] <- "depth"
    geom_smooth(method = 'lm', se = F) +
    facet_wrap(. ~ index, scales = "free")
 
-# -----------------------------------------------------------------------------
+ ggsave("fish_grad_vs_S&Sn&SPIE.pdf", plot = p_f, path = wd_plots, width = 15, height = 12, 
+        units = "cm")
+ 
+  # -----------------------------------------------------------------------------
 
      # plotting the effect of depth on 'S', 'S_n', 'S_PIE'
  
  # binned 
- p2_b = mob_met_b %>% 
+ p2_f= mob_met_f%>% 
    subset(abs(value) < 1000) %>%
    subset(index %in% c('beta_S', 'beta_S_n', 'beta_S_PIE')) %>% 
    ggplot(aes(x = depth, y = value)) + 
@@ -235,16 +253,9 @@ colnames(mob_met_b)[colnames(mob_met_b) == "group"] <- "depth"
    geom_smooth(method = 'lm', se = F) +
    facet_wrap(. ~ index, scales = "free")
  
- g_b = ggarrange(p1_b, p2_b)
+ g_f= ggarrange(p1_f, p2_f)
  
-ggsave("ENS.pdf", plot = g_b, path = wd_plots, width = 20, height = 15, units = "cm")
-  
-###############################################################################
-
-                # ?????????????????????????? # 
-
- # the graphs work but something is very very weird with them. Try to find the 
- # problem
+ggsave("ENS.pdf", plot = g_f, path = wd_plots, width = 20, height = 15, units = "cm")
   
 
 
@@ -260,22 +271,11 @@ ggsave("ENS.pdf", plot = g_b, path = wd_plots, width = 20, height = 15, units = 
 
 # calculate biodiversity statistics: 
 
-biodiv <- calc_biodiv(sp_matric, groups = "depth", index = c('N', 'S', 'S_n', 'S_PIE'), effort = 5, extrapolate = FALSE, return_NA =  FALSE) 
+# biodiv <- calc_biodiv(sp_matric, groups = "depth", index = c('N', 'S', 'S_n', 'S_PIE'), effort = 5, extrapolate = FALSE, return_NA =  FALSE) 
 
 # ----------------------------------------------------------------------------- 
-  
-  
-  
-  
-  
-  
-  
-##################################################
-
 # my code - comes from the mobR package instructions:
-
- #################################################
-# _______________________________________________________________
+# ___________________________________________________
 
 # check for linear relationship 
 # between the # samples and # individuals
@@ -299,28 +299,7 @@ for (i in unique(red_depth_bins$depth)) {
   
 }
 
-# _______________________________________________________________
 
-# mob_in object 
-
-# `comm` = community matrix (only species)
-# `plot_attr` =  the meta-data for each sample (only the groups we want to compare. A character string) and coordinate if we have and want to use them.
-# `coord_names`  = column names of longitude and latitude  
-
-# _______________________________________________________________
-
-
-
-
-
-
-
-
-#                           #  mobr package  #
-# 
-#     # Creating richness rarefaction curves over treatments and env gradients #  
-# 
-# -----------
 
 
 # delta_med <- get_delta_stats(mob_in_med, mob_in_med$env$depth, ref_level = NULL, tests = c("SAD", "N", "agg"), spat_algo = 'kNN', type = "continuous",
@@ -371,22 +350,7 @@ for (i in unique(red_depth_bins$depth)) {
 
 
 
-
-# next steps:
-
-
-
-# then ask myself what syntax the most complex function in mob r (the one that calculated the difference between the rarefactions) needs
-# correct the rarefaction syntax I used to what is required
-# created the other rarefactions
-
 # and later later I think of adding analysis that are connected to species compositions - although this was done before
-
-
-
-# if needed:
-
-
 
 #if binned data required:
 red_depth_bins <- wide_red
