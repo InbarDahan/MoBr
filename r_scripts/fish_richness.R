@@ -16,7 +16,8 @@ library(mobr)         # running rarefaction analysis - for gradients
 library(mapview)      # visualization
 library(sf)           # visualization
 library(raster)       # for raster object
-library(RColorBrewer)    # color palettes
+library(RColorBrewer) # color palettes
+library(ggpmisc)      # trade line
 
 # wd:
 wd_processed_data <- "C:/Users/inbar/OneDrive/desktop/r/chapter_2/MoBr/data/processed" 
@@ -131,13 +132,25 @@ ggplot(wide_med_sum,aes(x=depth,y=abundance))+
 ggplot(wide_med_sum,aes(x=depth,y=abundance))+                               
   geom_line(size = 1.5, col = "cyan") + ggtitle("med sea abundance ~ depth") 
 
-# red - points: 
-ggplot(wide_red_sum,aes(x=depth,y=abundance))+
-  geom_point(size = 1.5, col = "indianred2") + ggtitle("red sea abundance ~ depth") 
+# -----------
+# Fit the linear model
+model <- lm(abundance ~ depth, data = wide_red_sum)
+# Extract the equation and R-squared
+eq <- paste0("y = ", round(coef(model)[1], 2), " ", round(coef(model)[2], 2), "x")
+r_squared <- paste0("R² = ", round(summary(model)$r.squared, 2))
+
+# Create the plot
+ggplot(wide_red_sum, aes(x = depth, y = abundance)) +
+  labs(y = "Abundance", x = "Depth") +
+  ggtitle("                                   Abundance Across Depths (Fish)") +
+  geom_point(size = 3, color = "indianred2") + 
+  geom_smooth(method = "lm", se = TRUE, color = "black") +
+  annotate("text", x = Inf, y = 250, label = eq, hjust = 1.1, vjust = 2, size = 4.5, color = "black") +
+  annotate("text", x = 145, y = 230, label = r_squared, hjust = 1.1, vjust = 3, size = 4.5, color = "black")
 
 # red - line: 
 ggplot(wide_red_sum,aes(x=depth,y=abundance))+
-  geom_line(size = 1.5, col = "indianred2") + ggtitle("red sea abundance ~ depth") 
+  geom_line(size = 1.5, col = "indianred2") + ggtitle("Red Sea abundance ~ depth") 
 
 # -----------
 
@@ -151,9 +164,21 @@ ggplot(wide_med_sum,aes(x=depth,y=richness))+
 ggplot(wide_med_sum,aes(x=depth,y=richness))+
   geom_line(size = 1.5, col = "cyan") + ggtitle("med sea richness ~ depth") 
 
+# -----------
+
+# Fit the linear model
+model_r <- lm(richness ~ depth, data = wide_red_sum)
+# Extract the equation and R-squared
+eq_r <- paste0("y = ", round(coef(model_r)[1], 2), " ", round(coef(model_r)[2], 2), "x")
+r_squared_r <- paste0("R² = ", round(summary(model)$r.squared, 2))
+
 # red - points: 
 ggplot(wide_red_sum,aes(x=depth,y=richness))+
-  geom_point(size = 1.5, col = "indianred2") + ggtitle("red sea richness ~ depth") 
+  labs(y= "Richness", x = "Depth")+
+  geom_point(size = 3, col = "indianred2") + ggtitle("                                       Richness Across Depths (Fish)")+
+  geom_smooth(method = "lm", se = TRUE, color = "black") + 
+  annotate("text", x = Inf, y = 50, label = eq_r, hjust = 1.1, vjust = 2, size = 4.5, color = "black") +
+  annotate("text", x = 145, y = 46, label = r_squared_r, hjust = 1.1, vjust = 3, size = 4.5, color = "black")
 
 # red - line: 
 ggplot(wide_red_sum,aes(x=depth,y=richness))+
@@ -200,7 +225,7 @@ red_depth_bins$depth <- cut(red_depth_bins$depth,
 #med:
 med_bins_long <- med_depth_bins %>%                                                      # the df to convert
   dplyr::select(-c(2, 4, 5, 6)) %>%                                                      # columns to remove
-  pivot_longer(cols = !c(depth, OpCode), names_to = "species", values_to = "count") %>%  # transforming to wide
+  tidyr::pivot_longer(cols = !c(depth, OpCode), names_to = "species", values_to = "count") %>%  # transforming to wide
   filter(!count == 0) %>%                                                                #removing rows with 0 abundance so species will not be counted when they are not present
   group_by(depth, OpCode) %>%                                                            # grouping by sea and species
   summarise(sample_r = n_distinct(species), sample_abu = sum(count))                     # richness per depth bin - no repeated species
@@ -208,7 +233,7 @@ med_bins_long <- med_depth_bins %>%                                             
 #red:
 red_bins_long <- red_depth_bins %>%                                                      # the df to convert
   dplyr::select(-c(2, 4, 5, 6)) %>%                                                      # columns to remove
-  pivot_longer(cols = !c(depth, OpCode), names_to = "species", values_to = "count") %>%  # transforming to wide
+  tidyr::pivot_longer(cols = !c(depth, OpCode), names_to = "species", values_to = "count") %>%  # transforming to wide
   filter(!count == 0) %>%                                                                #removing rows with 0 abundance so species will not be counted when they are not present
   group_by(depth, OpCode) %>%                                                            # grouping by sea and species
   summarise(sample_r = n_distinct(species), sample_abu = sum(count))                     # richness per depth bin - no repeated species

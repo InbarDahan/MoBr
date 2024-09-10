@@ -15,6 +15,7 @@ library(mapview)      # visualization
 library(sf)           # visualization
 library(raster)       # for raster object
 library(RColorBrewer)    # color palettes
+require(ggmisc)
 
 # wd:
 wd_processed_data <- "C:/Users/inbar/OneDrive/desktop/r/chapter_2/MoBr/data/processed" 
@@ -77,18 +78,39 @@ max(sponges_sum$richness) # 12
 # _______________________________________________________________
 
 # plot abundance per sample ~ depth (wide_data)
+# Fit the linear model
+model_a <- lm(abundance ~ depth, data = sponges_sum)
+# Extract the equation and R-squared
+eq_a <- paste0("y = ", round(coef(model_a)[1], 2), " ", round(coef(model_a)[2], 2), "x")
+r_squared_a <- paste0("R² = ", round(summary(model_a)$r.squared, 2))
 
-# red - points: 
-ggplot(sponges_sum,aes(x=depth,y=abundance))+
-  geom_point(size = 1.5, col = "indianred2") + ggtitle("abundance ~ depth") 
+# Create the plot
+ggplot(sponges_sum, aes(x = depth, y = abundance)) +
+  labs(y = "Abundance", x = "Depth") +
+  ggtitle("                                   Abundance Across Depths (Sponges)") +
+  geom_point(size = 3, color = "orange") + 
+  geom_smooth(method = "lm", se = TRUE, color = "black") +
+  annotate("text", x = 17.5, y = Inf, label = eq_a, hjust = 1.1, vjust = 2, size = 4.5, color = "black") +
+  annotate("text", x = 11, y = 37, label = r_squared_a, hjust = 1.1, vjust = 3, size = 4.5, color = "black")
 
 # -----------
 
 # plot richness per sample ~ depth (wide_data)
 
-# red - points: 
-ggplot(sponges_sum,aes(x=depth,y=richness))+
-  geom_point(size = 1.5, col = "indianred2") + ggtitle("richness ~ depth") 
+# Fit the linear model
+model_r_s <- lm(richness ~ depth, data = sponges_sum)
+# Extract the equation and R-squared
+eq_r_s <- paste0("y = ", round(coef(model_r_s)[1], 2), " ", round(coef(model_r_s)[2], 2), "x")
+r_squared_r_s <- paste0("R² = ", round(summary(model_r_s)$r.squared, 2))
+
+# Create the plot
+ggplot(sponges_sum, aes(x = depth, y = richness)) +
+  labs(y = "Richness", x = "Depth") +
+  ggtitle("                                   Richness Across Depths (Sponges)") +
+  geom_point(size = 3, color = "orange") + 
+  geom_smooth(method = "lm", se = TRUE, color = "black") +
+  annotate("text", x = 18, y = Inf, label = eq_r_s, hjust = 1.1, vjust = 2, size = 4.5, color = "black") +
+  annotate("text", x = 12.5, y = 11.5, label = r_squared_r_s, hjust = 1.1, vjust = 3, size = 4.5, color = "black")
 
 # _______________________________________________________________
 # alternative plots:

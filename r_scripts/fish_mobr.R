@@ -42,6 +42,7 @@ wide_red <- read.csv("wide_red.csv")
 # removing the wired column x
 wide_red = wide_red %>% dplyr::select(-X)
 
+
 # -----------------------------------------------------------------------------
 
                             # prepare the data
@@ -58,7 +59,22 @@ red_depth_bins <- wide_red
 # 8.1 - 149 m to - 15 m bins (8 layers)
 red_depth_bins <-  wide_red %>% mutate(depth_group = cut(wide_red$depth,                                         
                    breaks=c(0, 15, 30, 45, 60, 75, 90, 105, 120, 135, 149),
-                   labels=c('0-15', '16-30', '31-45', '46-60', '61-75','76-90', '91-105', '106-120', '121-135', '136-149')))
+                   labels=c('0-15', '16-30', '31-45', '46-60', '61-75','76-90', '91-105', '106-120', '121-135', '136-149'))) %>% 
+  relocate(depth_group,.after = lon_x) 
+
+# count samples abundances:
+species_abundances <- rowSums(red_depth_bins[, 8:ncol(red_depth_bins)])
+
+# add the abundance column to the data frame
+red_depth_bins$sample_abu <- species_abundances
+
+
+red_depth_bins<-red_depth_bins %>% relocate(sample_abu,.after = depth_group)
+
+
+test<-red_depth_bins %>% group_by(depth_group) %>% summarise(high_samples = sum(sample_abu >= 5))
+
+length(which(red_depth_bins$sample_abu >= 5)) # 110\123
 
 # -----------------------------------------------------------------------------
 
@@ -98,12 +114,14 @@ plot(stats_f)
 delta_red = get_delta_stats(mob_in = red_bin_mob_in, env_var = 'depth',  # define the env gradient
                             group_var = 'depth_group', stats = c('betas', 'r'), # define the site\grouping var
                             type = 'continuous', spat_algo = 'kNCN', # define the type of var # define the spatial rarefaction method
-                            n_perm = 100, overall_p = FALSE) # 
+                            n_perm = 199, overall_p = FALSE, density_stat = c("mean", "max", "min")) # 
 
-plot(delta_red, stat = 'b1', scale_by = 'indiv',    # stat can be changed based on the wanted effect size method 
-     eff_sub_effort = F, eff_log_base = 2,          # subset\all samples   #   
+plot(delta_red, stat = 'b1', scale_by = 'indiv',  # stat can be changed based on the wanted effect size method 
+     eff_sub_effort = F, eff_log_base = 1,          # subset\all samples   #   
      eff_disp_pts = T,                              # T\P - show the raw effect points
-     eff_disp_smooth = T)                           # T\F - show the linear effect of the expl var on the effect sizes
+     eff_disp_smooth = F) # T\F - show the linear effect of the expl var on the effect sizes
+
+plot(delta_red)
 
 setwd(wd_results)
 save(delta_red, file = 'deltas_red.Rdata')
@@ -362,7 +380,10 @@ red_depth_bins$depth <- cut(red_depth_bins$depth,
 
 
 
-
+# Trying to chnage the colors
+#values = c('white','yellow','orange','#f768a1','red','brown','purple','#3f007d', 'blue','black'
+# fun_color_range <- colorRampPalette(c('#3f007d', '#e31a1c' ,'#f768a1', '#feb24c', 'yellow'))    
+# my_colors <- fun_color_range(100) 
 
 
 
