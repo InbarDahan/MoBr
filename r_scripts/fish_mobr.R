@@ -17,15 +17,12 @@
                     #' @author Dan McGlinn and Xiao Xiao
 
 # -----------------------------------------------------------------------------
-install.packages(c('devtools', 'mobr', 'leaflet', 'mapview', 'tidyr',
-                   'vegan', 'dplyr', 'ggplot2', 'egg'))
 
 library(mobr)         # running rarefaction analysis - for gradients
 library(vegan)
 library(dplyr)        
 library(ggplot2)
 library(egg)
-devtools::install_version("broom", version = "0.5.4", repos = "http://cran.us.r-project.org")
 library(broom)
 # -----------------------------------------------------------------------------
 
@@ -41,7 +38,6 @@ wide_red <- read.csv("wide_red.csv")
 
 # removing the wired column x
 wide_red = wide_red %>% dplyr::select(-X)
-
 
 # -----------------------------------------------------------------------------
 
@@ -60,27 +56,24 @@ red_depth_bins <- wide_red
 red_depth_bins <-  wide_red %>% mutate(depth_group = cut(wide_red$depth,                                         
                    breaks=c(0, 15, 30, 45, 60, 75, 90, 105, 120, 135, 149),
                    labels=c('0-15', '16-30', '31-45', '46-60', '61-75','76-90', '91-105', '106-120', '121-135', '136-149'))) %>% 
-  relocate(depth_group,.after = lon_x) 
+  relocate(depth_group,.after = depth) 
 
-# count samples abundances:
-species_abundances <- rowSums(red_depth_bins[, 8:ncol(red_depth_bins)])
+# # count samples abundances:
+# species_abundances <- rowSums(red_depth_bins[, 8:ncol(red_depth_bins)])
+# 
+# # add the abundance column to the data frame
+# red_depth_bins$sample_abu <- species_abundances
+# red_depth_bins<-red_depth_bins %>% relocate(sample_abu,.after = depth_group)
 
-# add the abundance column to the data frame
-red_depth_bins$sample_abu <- species_abundances
-
-
-red_depth_bins<-red_depth_bins %>% relocate(sample_abu,.after = depth_group)
-
-
-test<-red_depth_bins %>% group_by(depth_group) %>% summarise(high_samples = sum(sample_abu >= 5))
-
-length(which(red_depth_bins$sample_abu >= 5)) # 110\123
+# check the number of samples with more then 5 individuals (sampling effort)
+# test <-red_depth_bins %>% group_by(depth_group) %>% summarise(high_samples = sum(sample_abu >= 5))
+# length(which(red_depth_bins$sample_abu >= 5)) # 110\123 # this might be the problam in the graph
 
 # -----------------------------------------------------------------------------
 
                        # make the "mob in" object
 # create env var
-env_red <- red_depth_bins[, c(1, 3:6, 180)]
+env_red <- red_depth_bins[, c(1, 3:7)]
 
 # make mob in
 red_bin_mob_in <- make_mob_in(sp_matric, env_red, # define the sp matrix and the variables   # no wornings apear - v
@@ -92,9 +85,9 @@ red_bin_mob_in <- make_mob_in(sp_matric, env_red, # define the sp matrix and the
 
 # binned:
  # here the α and γ scales are different. One sample vs depth bin
-stats_f <- get_mob_stats(red_bin_mob_in, group_var = "depth_group", extrapolate = FALSE) 
-
-plot(stats_f)
+# stats_f <- get_mob_stats(red_bin_mob_in, group_var = "depth_group", extrapolate = FALSE) 
+# 
+# plot(stats_f)
 
 # the output is multiple graphs for the binned depths var. It seems like there is a decrease in abundance and richness with depth.
 # but not in rarefied richness. Scale dependent.
@@ -111,15 +104,16 @@ plot(stats_f)
 # shape of the SAD, treatment\group density (N) and aggregations degree:
 
 # red:
-delta_red = get_delta_stats(mob_in = red_bin_mob_in, env_var = 'depth',  # define the env gradient
+delta_red <- get_delta_stats(mob_in = red_bin_mob_in, env_var = 'depth',  # define the env gradient
                             group_var = 'depth_group', stats = c('betas', 'r'), # define the site\grouping var
                             type = 'continuous', spat_algo = 'kNCN', # define the type of var # define the spatial rarefaction method
-                            n_perm = 199, overall_p = FALSE, density_stat = c("mean", "max", "min")) # 
+                            n_perm = 199, overall_p = FALSE) #, density_stat = c("mean", "max", "min")) # 
+
 
 plot(delta_red, stat = 'b1', scale_by = 'indiv',  # stat can be changed based on the wanted effect size method 
-     eff_sub_effort = F, eff_log_base = 1,          # subset\all samples   #   
-     eff_disp_pts = T,                              # T\P - show the raw effect points
-     eff_disp_smooth = F) # T\F - show the linear effect of the expl var on the effect sizes
+     eff_sub_effort = F, eff_log_base = 2,          # subset\all samples   #   
+     eff_disp_pts = F,                              # T\F - show the raw effect points
+     eff_disp_smooth = T) # T\F - show the linear effect of the expl var on the effect sizes
 
 plot(delta_red)
 
@@ -137,6 +131,9 @@ save(delta_red, file = 'deltas_red.Rdata')
 
 # summary - there are changes in the behavior of different underlying components on richness over the depth gradient
 #           the components are also influenced by scale.
+
+# some curves are grey, lets try to trableshot it:
+str(delta_red)
 
 #______________________________________________________________________________
 

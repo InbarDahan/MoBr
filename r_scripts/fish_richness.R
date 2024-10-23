@@ -111,6 +111,13 @@ wide_red_sum <- wide_red %>%
   mutate(richness = rowSums(wide_red[, first_species:ncol(wide_red)] > 0)) %>%
   dplyr::select(OpCode, depth, lon_x, lat_y, richness, abundance)
 
+# sf:
+sample_red_sf <- st_as_sf(wide_red_sum, coords = c('lon_x', 'lat_y'), crs = crs("+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0"))
+
+# map of sample richness:
+mapView(sample_red_sf, zcol = "richness", legend = TRUE,
+        layer.name = 'Richness')
+
 # check the difference between the smallest n sample and the largest n sample in each sea (the variance in abundance):
 min(wide_red_sum$abundance) # 1
 max(wide_red_sum$abundance) # 252
@@ -142,7 +149,7 @@ r_squared <- paste0("R² = ", round(summary(model)$r.squared, 2))
 # Create the plot
 ggplot(wide_red_sum, aes(x = depth, y = abundance)) +
   labs(y = "Abundance", x = "Depth") +
-  ggtitle("                                   Abundance Across Depths (Fish)") +
+  ggtitle("                         Fish - Abundance Across Depths") +
   geom_point(size = 3, color = "indianred2") + 
   geom_smooth(method = "lm", se = TRUE, color = "black") +
   annotate("text", x = Inf, y = 250, label = eq, hjust = 1.1, vjust = 2, size = 4.5, color = "black") +
@@ -261,14 +268,12 @@ par(mfrow=c(1,1))
 # red:                                                  # we have outliers (step 1 from zuur 2010)
 boxplot(sample_abu~depth,                               # we do not have homogeneity of variance (step 2 from zuur 2010)
         data=red_bins_long,                             # we do not have normal distributions (step 3 from zuur 2010)
-        main= "Depth binned abundance",       # we have zero inflated data (step 4)
+        main= "Fish - Abundance Across Depth Layers",       # we have zero inflated data (step 4)
         xlab="Depth ranges (m)",                             # if I will add more explanatory variable except depth - I will need to check for co-linearity (the relationship between a few x) (step 5)
         ylab="Abundance",                    # the relationship between the abu ~ depth is  (step 6 from zuur 2010)
         col="indianred2",
         border="black", add = F
 )
-
-
 
 # -----------
 
@@ -305,7 +310,7 @@ boxplot(sample_r~depth,
 # red:
 boxplot(sample_r~depth,
         data=red_bins_long,
-        main="Richness Across Depth Layers",
+        main="Fish - Richness Across Depth Layers",
         xlab="Depth layer",
         ylab="Richness per sample",
         col="indianred2",

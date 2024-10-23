@@ -1,0 +1,24 @@
+---
+title: "to do - fish richness patterns"
+output: html_document
+date: "2024-06-13"
+---
+To do:
+
+changes:
+
+
+
+plots:
+
+*@ V @* - Richness graph that shows the number of unique species in each depth interval.
+requires to sum the number of unique species names in each depth interval - on the long format.
+* to make sure I am not counting species twice 
+
+
+- checking the nestedness of the species over the depth gradient 
+*-* support for the mid domain effect (random) or ecological constrains?
+
+- mean depth distribution over depth - depth ranges - shahar does it but check it anyways
+
+- rarefaction plots for the 3 mrchanisms

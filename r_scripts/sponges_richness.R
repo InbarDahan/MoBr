@@ -2,7 +2,7 @@
 
                   ###  sponges Richness and abundance   ###
 
-# Does the sponges richness changes across depths layers ?
+        # Does the sponges richness changes across depths layers ?
 
 library(vegan)        # running rarefaction analysis
 library(tidyverse)    # organizing the data 
@@ -58,7 +58,7 @@ mapView(sponges_sf, zcol = "depth", legend = TRUE, layer.name = 'Depth')
 
 # _______________________________________________________________
 
-# sampling effort
+# general sampling effort
 
 # red: add 2 additional columns: abundance and richness per sample:
 sponges_sum <- sponges %>% 
@@ -66,14 +66,36 @@ sponges_sum <- sponges %>%
   mutate(richness = rowSums(sponges[, first_species:ncol(sponges)] > 0)) %>%
   dplyr::select(quad, depth_group, depth, Site, lon, lat, richness, abundance)
 
-# check the difference between the smallest n sample and the largest n sample in each sea (the variance in abundance):
-min(sponges_sum$abundance) # 1
-max(sponges_sum$abundance) # 252
+# sum abundance:
+min(sponges_sum$abundance) # 0
+max(sponges_sum$abundance) # 38
 # 252 folds variation in the alpha scale (sample scale)
 
 # sum richness:
 min(sponges_sum$richness) # 0
 max(sponges_sum$richness) # 12
+
+# _______________________________________________________________
+
+# IUI sampling effort
+
+# red: add 2 additional columns: abundance and richness per sample:
+sponges_sum_iui <- sponges_sum %>% filter(Site == "IUI")
+
+# sum abundance per sample:
+min(sponges_sum_iui$abundance) # 0
+max(sponges_sum$abundance) # 38
+# 252 folds variation in the alpha scale (sample scale)
+
+# sum richness per sample:
+min(sponges_sum_iui$richness) # 0
+max(sponges_sum_iui$richness) # 6
+
+# depths histogram:
+sponges_sum_iui %>% 
+  ggplot()+
+  aes(x = depth)+
+  geom_histogram(bins = 25) + ggtitle("IUI -histogram of samples at each depth")  # most of the depths have 3-5 observations\opcodes
 
 # _______________________________________________________________
 
@@ -121,10 +143,10 @@ ggplot(sponges_sum, aes(x = depth, y = richness)) +
 # red:                                                  # we have outliers (step 1 from zuur 2010)
 boxplot(abundance~depth,                               # we do not have homogeneity of variance (step 2 from zuur 2010)
         data=sponges_sum,                             # we do not have normal distributions (step 3 from zuur 2010)
-        main= "Abundance Across Depth Layers",       # we have zero inflated data (step 4)
+        main= "Sponges - Abundance Across Depth Layers",       # we have zero inflated data (step 4)
         xlab="Depth ranges (m)",                             # if I will add more explanatory variable except depth - I will need to check for co-linearity (the relationship between a few x) (step 5)
         ylab="Abundance",                    # the relationship between the abu ~ depth is  (step 6 from zuur 2010)
-        col="indianred2",
+        col="orange",
         border="black", add = F
 )
 
@@ -144,10 +166,10 @@ ggplot(sponges_sum, aes(x = depth, y = abundance)) +
 # shows mean and quarters, all samples distribution
 boxplot(richness~depth,
         data=sponges_sum,
-        main="Richness Across Depth Layers",
+        main="Sponges - Richness Across Depth Layers",
         xlab="Depth layer",
         ylab="Richness per sample",
-        col="indianred2",
+        col="orange",
         border="black"
 )
 
@@ -157,6 +179,59 @@ boxplot(richness~depth,
 # Bar plot - mean richness
 
 ggplot(sponges_sum, aes(x = depth, y = richness)) + 
+  stat_summary(fun = "mean", geom = "bar", fill = fun_color_range_red)+
+  ggtitle("avr rich ~ depth")
+# _______________________________________________________________
+
+
+
+
+                       # IUI site only
+
+# alternative plots:
+# Box plot - abundance over depth layers
+
+# shows mean and quarters, all samples distribution
+
+# red:                                                  # we have outliers (step 1 from zuur 2010)
+boxplot(abundance~depth,                               # we do not have homogeneity of variance (step 2 from zuur 2010)
+        data=sponges_sum_iui,                             # we do not have normal distributions (step 3 from zuur 2010)
+        main= "Sponges IUI - Abundance Across Depth Layers",       # we have zero inflated data (step 4)
+        xlab="Depth ranges (m)",                             # if I will add more explanatory variable except depth - I will need to check for co-linearity (the relationship between a few x) (step 5)
+        ylab="Abundance",                    # the relationship between the abu ~ depth is  (step 6 from zuur 2010)
+        col="orange",
+        border="black", add = F
+)
+
+# - - -
+# Bar plot  -  mean abundance over depth layers
+
+fun_color_range_red <- brewer.pal(5, "Reds") # doensn't work for more than 9
+
+ggplot(sponges_sum_iui, aes(x = depth, y = abundance)) + 
+  stat_summary(fun = "mean", geom = "bar", fill = fun_color_range_red)+
+  ggtitle("avr abu ~ depth")
+
+# _______________________________________________________________
+
+# Box plot - richness 
+
+# shows mean and quarters, all samples distribution
+boxplot(richness~depth,
+        data=sponges_sum_iui,
+        main="Sponges IUI - Richness Across Depth Layers",
+        xlab="Depth layer",
+        ylab="Richness per sample",
+        col="orange",
+        border="black"
+)
+
+
+# -----------
+
+# Bar plot - mean richness
+
+ggplot(sponges_sum_iui, aes(x = depth, y = richness)) + 
   stat_summary(fun = "mean", geom = "bar", fill = fun_color_range_red)+
   ggtitle("avr rich ~ depth")
 # _______________________________________________________________
