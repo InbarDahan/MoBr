@@ -4,6 +4,10 @@
 
 # what drivers shape the change in fish richness over the depth gradient ?
 
+# This code is an exploratory code to try different functions from the mobr analysis - 
+# The code "fixing the mobr analysis" is the new code. 
+
+
 # -----------------------------------------------------------------------------
 
                         # codes from the papers:
@@ -51,13 +55,30 @@ first_species <- 7
 sp_matric <- wide_red[,first_species:length(wide_red)]
 
 #if binned data required:
-red_depth_bins <- wide_red
-
 # 8.1 - 149 m to - 15 m bins (8 layers)
 red_depth_bins <-  wide_red %>% mutate(depth_group = cut(wide_red$depth,                                         
                    breaks=c(0, 15, 30, 45, 60, 75, 90, 105, 120, 135, 149),
                    labels=c('0-15', '16-30', '31-45', '46-60', '61-75','76-90', '91-105', '106-120', '121-135', '136-149'))) %>% 
   relocate(depth_group,.after = depth) 
+
+#############################
+library(mobr)
+library(dplyr)
+
+data(tank_comm)
+data(tank_plot_attr)
+indices <- c('N', 'S', 'S_n', 'S_C', 'S_PIE')
+fish_div <- tibble(red_depth_bins) %>% 
+  group_by(group = env_red$depth) %>% 
+  group_modify(~ calc_comm_div(.x, index = indices, effort = 5,
+                               extrapolate = TRUE))
+plot(tank_div)
+tank_mob_in <- make_mob_in(red_depth_bins, env_red, coord_names = c('lon_x', 'lat_y'))
+tank_deltaS <- get_delta_stats(tank_mob_in, 'depth_group', ref_level='low',
+                               type='discrete', log_scale=TRUE, n_perm = 5)
+plot(tank_deltaS, 'b1')
+#############################
+
 
 # # count samples abundances:
 # species_abundances <- rowSums(red_depth_bins[, 8:ncol(red_depth_bins)])
@@ -74,7 +95,7 @@ red_depth_bins <-  wide_red %>% mutate(depth_group = cut(wide_red$depth,
 
                        # make the "mob in" object
 # create env var
-env_red <- red_depth_bins[, c(1, 3:7)]
+env_red <- red_depth_bins[, c(1, 3:6)]
 
 # make mob in
 red_bin_mob_in <- make_mob_in(sp_matric, env_red, # define the sp matrix and the variables   # no wornings apear - v
@@ -383,10 +404,51 @@ red_depth_bins$depth <- cut(red_depth_bins$depth,
 # fun_color_range <- colorRampPalette(c('#3f007d', '#e31a1c' ,'#f768a1', '#feb24c', 'yellow'))    
 # my_colors <- fun_color_range(100) 
 
+# ____________________________________________________________________________
+
+# creating 2 analysis - assuming no linear trend
+
+# The delta effect is assumed to be linear but is not necessarily so, 
+# hence we need to run two analysis, before and after the change in slopes
+
+red_depth_bins$depth_group <- as.numeric(as.character(red_depth_bins$depth_group))
+
+# try once before and after 37.5 m (create 2 data sets), and once for 52.5 m
+
+# Define breakpoints
+breakpoints <- c(37.5, 52.5)
+
+# create a general function to split the data 
+split_data <- function(df, cutoff) {
+  list(
+    under = df %>% filter(as.numeric(as.character(depth_group)) <= cutoff),
+    above = df %>% filter(as.numeric(as.character(depth_group)) > cutoff)
+  )
+}
+
+# Apply function to all breakpoints (x takes each break-point in the list)
+data_subsets <- lapply(breakpoints, function(x) split_data(red_depth_bins, x))
+
+# Flatten list (reduce from 2 lists to a united one) and name the elements
+data_subsets <- unlist(data_subsets, recursive = FALSE)
+names(data_subsets) <- c("under_37", "above_37", "under_52", "above_52")
 
 
 
+# create data sets:
+under_37 <- red_depth_bins %>% filter(depth_group <= 37.5)
+above_37 <- red_depth_bins %>% filter(depth_group > 37.5)
+under_52 <- red_depth_bins %>% filter(depth_group <= 52.5)
+above_52 <- red_depth_bins %>% filter(depth_group > 52.5)
 
+# create a list from the data frames in order to run a loop:
+data_subsets <- list()
+data_subsets[[1]] <- under_37
+data_subsets[[2]] <- above_37
+data_subsets[[3]] <- under_52
+data_subsets[[4]] <- above_52
+
+# ____________________________________________________________________________
 
 
 
