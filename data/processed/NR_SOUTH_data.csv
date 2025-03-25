@@ -1,0 +1,871 @@
+"","taxon","sample","depth","diversity_measure","value","lon","lat"
+"1","fish","isrwest130721A",144,"abundance",10,NA,NA
+"2","fish","isrwest130721A",144,"richness",5,NA,NA
+"3","fish","isrwest130721A",144,"sigma",0.00772819193455397,NA,NA
+"4","fish","isrwest130721D",76.9,"abundance",12,NA,NA
+"5","fish","isrwest130721D",76.9,"richness",5,NA,NA
+"6","fish","isrwest130721D",76.9,"sigma",0.464218242095224,NA,NA
+"7","fish","isrwest130721G",36,"abundance",86,NA,NA
+"8","fish","isrwest130721G",36,"richness",16,NA,NA
+"9","fish","isrwest130721G",36,"sigma",4.21826247361185,NA,NA
+"10","fish","isrwest130721H",10.5,"abundance",108,NA,NA
+"11","fish","isrwest130721H",10.5,"richness",41,NA,NA
+"12","fish","isrwest130721H",10.5,"sigma",1.04068087420562,NA,NA
+"13","fish","isrwest130721I",21.4,"abundance",137,NA,NA
+"14","fish","isrwest130721I",21.4,"richness",27,NA,NA
+"15","fish","isrwest130721I",21.4,"sigma",3.21549648632,NA,NA
+"16","fish","isrwest140520A",10.7,"abundance",58,NA,NA
+"17","fish","isrwest140520A",10.7,"richness",27,NA,NA
+"18","fish","isrwest140520A",10.7,"sigma",0.461185331000943,NA,NA
+"19","fish","isrwest140520B",26.8,"abundance",155,NA,NA
+"20","fish","isrwest140520B",26.8,"richness",26,NA,NA
+"21","fish","isrwest140520B",26.8,"sigma",3.98656534370942,NA,NA
+"22","fish","isrwest140520C",53.8,"abundance",34,NA,NA
+"23","fish","isrwest140520C",53.8,"richness",11,NA,NA
+"24","fish","isrwest140520C",53.8,"sigma",4.71864626949987,NA,NA
+"25","fish","isrwest140520D",68.9,"abundance",6,NA,NA
+"26","fish","isrwest140520D",68.9,"richness",5,NA,NA
+"27","fish","isrwest140520D",68.9,"sigma",0.0234870107351228,NA,NA
+"28","fish","isrwest140520E",83,"abundance",10,NA,NA
+"29","fish","isrwest140520E",83,"richness",6,NA,NA
+"30","fish","isrwest140520E",83,"sigma",0.0149077756686561,NA,NA
+"31","fish","isrwest140520F",105,"abundance",10,NA,NA
+"32","fish","isrwest140520F",105,"richness",6,NA,NA
+"33","fish","isrwest140520F",105,"sigma",0.00895689841914691,NA,NA
+"34","fish","isrwest141021A",10.3,"abundance",56,NA,NA
+"35","fish","isrwest141021A",10.3,"richness",19,NA,NA
+"36","fish","isrwest141021A",10.3,"sigma",2.66111599004108,NA,NA
+"37","fish","isrwest141021B",32.8,"abundance",141,NA,NA
+"38","fish","isrwest141021B",32.8,"richness",42,NA,NA
+"39","fish","isrwest141021B",32.8,"sigma",1.44454857100126,NA,NA
+"40","fish","isrwest141021C",145.3,"abundance",4,NA,NA
+"41","fish","isrwest141021C",145.3,"richness",3,NA,NA
+"42","fish","isrwest141021C",145.3,"sigma",0.0195414609133534,NA,NA
+"43","fish","isrwest141021D",54.6,"abundance",15,NA,NA
+"44","fish","isrwest141021D",54.6,"richness",12,NA,NA
+"45","fish","isrwest141021D",54.6,"sigma",3.40896852421111,NA,NA
+"46","fish","isrwest141021E",121.4,"abundance",5,NA,NA
+"47","fish","isrwest141021E",121.4,"richness",3,NA,NA
+"48","fish","isrwest141021E",121.4,"sigma",0.483210237665936,NA,NA
+"49","fish","isrwest141021F",71.8,"abundance",17,NA,NA
+"50","fish","isrwest141021F",71.8,"richness",6,NA,NA
+"51","fish","isrwest141021F",71.8,"sigma",3.74698207822459,NA,NA
+"52","fish","isrwest141021G",91,"abundance",1,NA,NA
+"53","fish","isrwest141021G",91,"richness",1,NA,NA
+"54","fish","isrwest141021G",91,"sigma",0.0896093888935205,NA,NA
+"55","fish","isrwest141021H",67.5,"abundance",18,NA,NA
+"56","fish","isrwest141021H",67.5,"richness",4,NA,NA
+"57","fish","isrwest141021H",67.5,"sigma",1.64586520741962,NA,NA
+"58","fish","isrwest141021I",45.5,"abundance",13,NA,NA
+"59","fish","isrwest141021I",45.5,"richness",9,NA,NA
+"60","fish","isrwest141021I",45.5,"sigma",0.0114312928976834,NA,NA
+"61","fish","isrwest180321A",137,"abundance",10,NA,NA
+"62","fish","isrwest180321A",137,"richness",4,NA,NA
+"63","fish","isrwest180321A",137,"sigma",0.00786592631325655,NA,NA
+"64","fish","isrwest180321B",118.2,"abundance",3,NA,NA
+"65","fish","isrwest180321B",118.2,"richness",3,NA,NA
+"66","fish","isrwest180321B",118.2,"sigma",0.0521168099182725,NA,NA
+"67","fish","isrwest180321C",92.3,"abundance",9,NA,NA
+"68","fish","isrwest180321C",92.3,"richness",6,NA,NA
+"69","fish","isrwest180321C",92.3,"sigma",0.249294927583836,NA,NA
+"70","fish","isrwest180321D",70.6,"abundance",5,NA,NA
+"71","fish","isrwest180321D",70.6,"richness",5,NA,NA
+"72","fish","isrwest180321D",70.6,"sigma",0.0432486754923437,NA,NA
+"73","fish","isrwest180321E",53.3,"abundance",119,NA,NA
+"74","fish","isrwest180321E",53.3,"richness",17,NA,NA
+"75","fish","isrwest180321E",53.3,"sigma",3.2467285597699,NA,NA
+"76","fish","isrwest180321F",34.3,"abundance",51,NA,NA
+"77","fish","isrwest180321F",34.3,"richness",20,NA,NA
+"78","fish","isrwest180321F",34.3,"sigma",1.26621448699994,NA,NA
+"79","fish","isrwest180321G",140,"abundance",5,NA,NA
+"80","fish","isrwest180321G",140,"richness",3,NA,NA
+"81","fish","isrwest180321G",140,"sigma",0.483210237665936,NA,NA
+"82","fish","isrwest180321H",8.1,"abundance",159,NA,NA
+"83","fish","isrwest180321H",8.1,"richness",25,NA,NA
+"84","fish","isrwest180321H",8.1,"sigma",2.21759557559055,NA,NA
+"85","fish","isrwest240220A",10,"abundance",33,NA,NA
+"86","fish","isrwest240220A",10,"richness",15,NA,NA
+"87","fish","isrwest240220A",10,"sigma",1.4366574938553,NA,NA
+"88","fish","isrwest240220B",20,"abundance",80,NA,NA
+"89","fish","isrwest240220B",20,"richness",20,NA,NA
+"90","fish","isrwest240220B",20,"sigma",4.17128006698846,NA,NA
+"91","fish","isrwest240220C",40.4,"abundance",34,NA,NA
+"92","fish","isrwest240220C",40.4,"richness",13,NA,NA
+"93","fish","isrwest240220C",40.4,"sigma",1.22406978230099,NA,NA
+"94","fish","isrwest240220D",60.9,"abundance",9,NA,NA
+"95","fish","isrwest240220D",60.9,"richness",2,NA,NA
+"96","fish","isrwest240220D",60.9,"sigma",1.57430216938532,NA,NA
+"97","fish","isrwest240220E",76.6,"abundance",43,NA,NA
+"98","fish","isrwest240220E",76.6,"richness",14,NA,NA
+"99","fish","isrwest240220E",76.6,"sigma",1.53880527130186,NA,NA
+"100","fish","isrwest240220F",103.7,"abundance",3,NA,NA
+"101","fish","isrwest240220F",103.7,"richness",2,NA,NA
+"102","fish","isrwest240220F",103.7,"sigma",0.0150563559131666,NA,NA
+"103","fish","isrwest260122A",140,"abundance",8,NA,NA
+"104","fish","isrwest260122A",140,"richness",4,NA,NA
+"105","fish","isrwest260122A",140,"sigma",4.60925448473406,NA,NA
+"106","fish","isrwest260122B",114,"abundance",6,NA,NA
+"107","fish","isrwest260122B",114,"richness",4,NA,NA
+"108","fish","isrwest260122B",114,"sigma",0.95418307142064,NA,NA
+"109","fish","isrwest260122C",149,"abundance",3,NA,NA
+"110","fish","isrwest260122C",149,"richness",3,NA,NA
+"111","fish","isrwest260122C",149,"sigma",0.0521168099182725,NA,NA
+"112","fish","isrwest260122D",92,"abundance",6,NA,NA
+"113","fish","isrwest260122D",92,"richness",5,NA,NA
+"114","fish","isrwest260122D",92,"sigma",0.0234870107351228,NA,NA
+"115","fish","isrwest260122E",71,"abundance",6,NA,NA
+"116","fish","isrwest260122E",71,"richness",5,NA,NA
+"117","fish","isrwest260122E",71,"sigma",0.0234870107351228,NA,NA
+"118","fish","isrwest260122F",48.4,"abundance",72,NA,NA
+"119","fish","isrwest260122F",48.4,"richness",22,NA,NA
+"120","fish","isrwest260122F",48.4,"sigma",2.00884892495261,NA,NA
+"121","fish","isrwest260122G",34.4,"abundance",30,NA,NA
+"122","fish","isrwest260122G",34.4,"richness",16,NA,NA
+"123","fish","isrwest260122G",34.4,"sigma",1.33597569255178,NA,NA
+"124","fish","isrwest260122H",16.8,"abundance",48,NA,NA
+"125","fish","isrwest260122H",16.8,"richness",20,NA,NA
+"126","fish","isrwest260122H",16.8,"sigma",2.57886411432852,NA,NA
+"127","fish","isrwest260122I",20.1,"abundance",50,NA,NA
+"128","fish","isrwest260122I",20.1,"richness",21,NA,NA
+"129","fish","isrwest260122I",20.1,"sigma",2.10872892329312,NA,NA
+"130","fish","isrwest260122J",40.9,"abundance",32,NA,NA
+"131","fish","isrwest260122J",40.9,"richness",11,NA,NA
+"132","fish","isrwest260122J",40.9,"sigma",1.68627870496705,NA,NA
+"133","sponges","10q10",10,"abundance",0,NA,NA
+"134","sponges","10q10",10,"richness",0,NA,NA
+"135","sponges","10q10",10,"sigma",NA,NA,NA
+"136","sponges","10q11",10,"abundance",1,NA,NA
+"137","sponges","10q11",10,"richness",1,NA,NA
+"138","sponges","10q11",10,"sigma",0.0896093888935205,NA,NA
+"139","sponges","10q12",10,"abundance",0,NA,NA
+"140","sponges","10q12",10,"richness",0,NA,NA
+"141","sponges","10q12",10,"sigma",NA,NA,NA
+"142","sponges","10q13",10,"abundance",1,NA,NA
+"143","sponges","10q13",10,"richness",1,NA,NA
+"144","sponges","10q13",10,"sigma",0.0896093888935205,NA,NA
+"145","sponges","10q14",10,"abundance",0,NA,NA
+"146","sponges","10q14",10,"richness",0,NA,NA
+"147","sponges","10q14",10,"sigma",NA,NA,NA
+"148","sponges","10q15",10,"abundance",0,NA,NA
+"149","sponges","10q15",10,"richness",0,NA,NA
+"150","sponges","10q15",10,"sigma",NA,NA,NA
+"151","sponges","10q16",10,"abundance",0,NA,NA
+"152","sponges","10q16",10,"richness",0,NA,NA
+"153","sponges","10q16",10,"sigma",NA,NA,NA
+"154","sponges","10q17",10,"abundance",0,NA,NA
+"155","sponges","10q17",10,"richness",0,NA,NA
+"156","sponges","10q17",10,"sigma",NA,NA,NA
+"157","sponges","10q18",10,"abundance",1,NA,NA
+"158","sponges","10q18",10,"richness",1,NA,NA
+"159","sponges","10q18",10,"sigma",0.0896093888935205,NA,NA
+"160","sponges","10q19",10,"abundance",1,NA,NA
+"161","sponges","10q19",10,"richness",1,NA,NA
+"162","sponges","10q19",10,"sigma",0.0896093888935205,NA,NA
+"163","sponges","10q2",10,"abundance",0,NA,NA
+"164","sponges","10q2",10,"richness",0,NA,NA
+"165","sponges","10q2",10,"sigma",NA,NA,NA
+"166","sponges","10q20",10,"abundance",1,NA,NA
+"167","sponges","10q20",10,"richness",1,NA,NA
+"168","sponges","10q20",10,"sigma",0.0896093888935205,NA,NA
+"169","sponges","10q21",10,"abundance",0,NA,NA
+"170","sponges","10q21",10,"richness",0,NA,NA
+"171","sponges","10q21",10,"sigma",NA,NA,NA
+"172","sponges","10q22",10,"abundance",0,NA,NA
+"173","sponges","10q22",10,"richness",0,NA,NA
+"174","sponges","10q22",10,"sigma",NA,NA,NA
+"175","sponges","10q23",10,"abundance",1,NA,NA
+"176","sponges","10q23",10,"richness",1,NA,NA
+"177","sponges","10q23",10,"sigma",0.0896093888935205,NA,NA
+"178","sponges","10q24",10,"abundance",2,NA,NA
+"179","sponges","10q24",10,"richness",2,NA,NA
+"180","sponges","10q24",10,"sigma",0.107545684837639,NA,NA
+"181","sponges","10q25",10,"abundance",0,NA,NA
+"182","sponges","10q25",10,"richness",0,NA,NA
+"183","sponges","10q25",10,"sigma",NA,NA,NA
+"184","sponges","10q26",10,"abundance",0,NA,NA
+"185","sponges","10q26",10,"richness",0,NA,NA
+"186","sponges","10q26",10,"sigma",NA,NA,NA
+"187","sponges","10q27",10,"abundance",0,NA,NA
+"188","sponges","10q27",10,"richness",0,NA,NA
+"189","sponges","10q27",10,"sigma",NA,NA,NA
+"190","sponges","10q28",10,"abundance",0,NA,NA
+"191","sponges","10q28",10,"richness",0,NA,NA
+"192","sponges","10q28",10,"sigma",NA,NA,NA
+"193","sponges","10q29",10,"abundance",0,NA,NA
+"194","sponges","10q29",10,"richness",0,NA,NA
+"195","sponges","10q29",10,"sigma",NA,NA,NA
+"196","sponges","10q3",10,"abundance",2,NA,NA
+"197","sponges","10q3",10,"richness",1,NA,NA
+"198","sponges","10q3",10,"sigma",0.00941169561488163,NA,NA
+"199","sponges","10q30",10,"abundance",0,NA,NA
+"200","sponges","10q30",10,"richness",0,NA,NA
+"201","sponges","10q30",10,"sigma",NA,NA,NA
+"202","sponges","10q31",10,"abundance",0,NA,NA
+"203","sponges","10q31",10,"richness",0,NA,NA
+"204","sponges","10q31",10,"sigma",NA,NA,NA
+"205","sponges","10q32",10,"abundance",0,NA,NA
+"206","sponges","10q32",10,"richness",0,NA,NA
+"207","sponges","10q32",10,"sigma",NA,NA,NA
+"208","sponges","10q33",10,"abundance",0,NA,NA
+"209","sponges","10q33",10,"richness",0,NA,NA
+"210","sponges","10q33",10,"sigma",NA,NA,NA
+"211","sponges","10q34",10,"abundance",0,NA,NA
+"212","sponges","10q34",10,"richness",0,NA,NA
+"213","sponges","10q34",10,"sigma",NA,NA,NA
+"214","sponges","10q35",10,"abundance",0,NA,NA
+"215","sponges","10q35",10,"richness",0,NA,NA
+"216","sponges","10q35",10,"sigma",NA,NA,NA
+"217","sponges","10q36",10,"abundance",1,NA,NA
+"218","sponges","10q36",10,"richness",1,NA,NA
+"219","sponges","10q36",10,"sigma",0.0896093888935205,NA,NA
+"220","sponges","10q37",10,"abundance",0,NA,NA
+"221","sponges","10q37",10,"richness",0,NA,NA
+"222","sponges","10q37",10,"sigma",NA,NA,NA
+"223","sponges","10q38",10,"abundance",1,NA,NA
+"224","sponges","10q38",10,"richness",1,NA,NA
+"225","sponges","10q38",10,"sigma",0.0896093888935205,NA,NA
+"226","sponges","10q39",10,"abundance",2,NA,NA
+"227","sponges","10q39",10,"richness",2,NA,NA
+"228","sponges","10q39",10,"sigma",0.107545684837639,NA,NA
+"229","sponges","10q4",10,"abundance",0,NA,NA
+"230","sponges","10q4",10,"richness",0,NA,NA
+"231","sponges","10q4",10,"sigma",NA,NA,NA
+"232","sponges","10q40",10,"abundance",0,NA,NA
+"233","sponges","10q40",10,"richness",0,NA,NA
+"234","sponges","10q40",10,"sigma",NA,NA,NA
+"235","sponges","10q41",10,"abundance",1,NA,NA
+"236","sponges","10q41",10,"richness",1,NA,NA
+"237","sponges","10q41",10,"sigma",0.0896093888935205,NA,NA
+"238","sponges","10q42",10,"abundance",0,NA,NA
+"239","sponges","10q42",10,"richness",0,NA,NA
+"240","sponges","10q42",10,"sigma",NA,NA,NA
+"241","sponges","10q5",10,"abundance",1,NA,NA
+"242","sponges","10q5",10,"richness",1,NA,NA
+"243","sponges","10q5",10,"sigma",0.0896093888935205,NA,NA
+"244","sponges","10q6",10,"abundance",0,NA,NA
+"245","sponges","10q6",10,"richness",0,NA,NA
+"246","sponges","10q6",10,"sigma",NA,NA,NA
+"247","sponges","10q7",10,"abundance",0,NA,NA
+"248","sponges","10q7",10,"richness",0,NA,NA
+"249","sponges","10q7",10,"sigma",NA,NA,NA
+"250","sponges","10q8",10,"abundance",0,NA,NA
+"251","sponges","10q8",10,"richness",0,NA,NA
+"252","sponges","10q8",10,"sigma",NA,NA,NA
+"253","sponges","10q9",10,"abundance",1,NA,NA
+"254","sponges","10q9",10,"richness",1,NA,NA
+"255","sponges","10q9",10,"sigma",0.0896093888935205,NA,NA
+"256","sponges","20q1",20,"abundance",2,NA,NA
+"257","sponges","20q1",20,"richness",2,NA,NA
+"258","sponges","20q1",20,"sigma",0.107545684837639,NA,NA
+"259","sponges","20q10",20,"abundance",0,NA,NA
+"260","sponges","20q10",20,"richness",0,NA,NA
+"261","sponges","20q10",20,"sigma",NA,NA,NA
+"262","sponges","20q11",20,"abundance",0,NA,NA
+"263","sponges","20q11",20,"richness",0,NA,NA
+"264","sponges","20q11",20,"sigma",NA,NA,NA
+"265","sponges","20q12",20,"abundance",0,NA,NA
+"266","sponges","20q12",20,"richness",0,NA,NA
+"267","sponges","20q12",20,"sigma",NA,NA,NA
+"268","sponges","20q13",20,"abundance",1,NA,NA
+"269","sponges","20q13",20,"richness",1,NA,NA
+"270","sponges","20q13",20,"sigma",0.0896093888935205,NA,NA
+"271","sponges","20q14",20,"abundance",0,NA,NA
+"272","sponges","20q14",20,"richness",0,NA,NA
+"273","sponges","20q14",20,"sigma",NA,NA,NA
+"274","sponges","20q15",20,"abundance",2,NA,NA
+"275","sponges","20q15",20,"richness",2,NA,NA
+"276","sponges","20q15",20,"sigma",0.107545684837639,NA,NA
+"277","sponges","20q16",20,"abundance",0,NA,NA
+"278","sponges","20q16",20,"richness",0,NA,NA
+"279","sponges","20q16",20,"sigma",NA,NA,NA
+"280","sponges","20q17",20,"abundance",1,NA,NA
+"281","sponges","20q17",20,"richness",1,NA,NA
+"282","sponges","20q17",20,"sigma",0.0896093888935205,NA,NA
+"283","sponges","20q18",20,"abundance",1,NA,NA
+"284","sponges","20q18",20,"richness",1,NA,NA
+"285","sponges","20q18",20,"sigma",0.0896093888935205,NA,NA
+"286","sponges","20q19",20,"abundance",1,NA,NA
+"287","sponges","20q19",20,"richness",1,NA,NA
+"288","sponges","20q19",20,"sigma",0.0896093888935205,NA,NA
+"289","sponges","20q2",20,"abundance",1,NA,NA
+"290","sponges","20q2",20,"richness",1,NA,NA
+"291","sponges","20q2",20,"sigma",0.0896093888935205,NA,NA
+"292","sponges","20q20",20,"abundance",2,NA,NA
+"293","sponges","20q20",20,"richness",2,NA,NA
+"294","sponges","20q20",20,"sigma",0.107545684837639,NA,NA
+"295","sponges","20q21",20,"abundance",1,NA,NA
+"296","sponges","20q21",20,"richness",1,NA,NA
+"297","sponges","20q21",20,"sigma",0.0896093888935205,NA,NA
+"298","sponges","20q22",20,"abundance",3,NA,NA
+"299","sponges","20q22",20,"richness",2,NA,NA
+"300","sponges","20q22",20,"sigma",0.0150563559131666,NA,NA
+"301","sponges","20q23",20,"abundance",0,NA,NA
+"302","sponges","20q23",20,"richness",0,NA,NA
+"303","sponges","20q23",20,"sigma",NA,NA,NA
+"304","sponges","20q24",20,"abundance",0,NA,NA
+"305","sponges","20q24",20,"richness",0,NA,NA
+"306","sponges","20q24",20,"sigma",NA,NA,NA
+"307","sponges","20q25",20,"abundance",0,NA,NA
+"308","sponges","20q25",20,"richness",0,NA,NA
+"309","sponges","20q25",20,"sigma",NA,NA,NA
+"310","sponges","20q26",20,"abundance",2,NA,NA
+"311","sponges","20q26",20,"richness",2,NA,NA
+"312","sponges","20q26",20,"sigma",0.107545684837639,NA,NA
+"313","sponges","20q27",20,"abundance",2,NA,NA
+"314","sponges","20q27",20,"richness",2,NA,NA
+"315","sponges","20q27",20,"sigma",0.107545684837639,NA,NA
+"316","sponges","20q3",20,"abundance",0,NA,NA
+"317","sponges","20q3",20,"richness",0,NA,NA
+"318","sponges","20q3",20,"sigma",NA,NA,NA
+"319","sponges","20q30",20,"abundance",0,NA,NA
+"320","sponges","20q30",20,"richness",0,NA,NA
+"321","sponges","20q30",20,"sigma",NA,NA,NA
+"322","sponges","20q31",20,"abundance",0,NA,NA
+"323","sponges","20q31",20,"richness",0,NA,NA
+"324","sponges","20q31",20,"sigma",NA,NA,NA
+"325","sponges","20q32",20,"abundance",2,NA,NA
+"326","sponges","20q32",20,"richness",1,NA,NA
+"327","sponges","20q32",20,"sigma",0.00941169561488163,NA,NA
+"328","sponges","20q33",20,"abundance",0,NA,NA
+"329","sponges","20q33",20,"richness",0,NA,NA
+"330","sponges","20q33",20,"sigma",NA,NA,NA
+"331","sponges","20q34",20,"abundance",1,NA,NA
+"332","sponges","20q34",20,"richness",1,NA,NA
+"333","sponges","20q34",20,"sigma",0.0896093888935205,NA,NA
+"334","sponges","20q4",20,"abundance",1,NA,NA
+"335","sponges","20q4",20,"richness",1,NA,NA
+"336","sponges","20q4",20,"sigma",0.0896093888935205,NA,NA
+"337","sponges","20q5",20,"abundance",0,NA,NA
+"338","sponges","20q5",20,"richness",0,NA,NA
+"339","sponges","20q5",20,"sigma",NA,NA,NA
+"340","sponges","20q6",20,"abundance",4,NA,NA
+"341","sponges","20q6",20,"richness",4,NA,NA
+"342","sponges","20q6",20,"sigma",0.0151422846952663,NA,NA
+"343","sponges","20q7",20,"abundance",0,NA,NA
+"344","sponges","20q7",20,"richness",0,NA,NA
+"345","sponges","20q7",20,"sigma",NA,NA,NA
+"346","sponges","20q8",20,"abundance",0,NA,NA
+"347","sponges","20q8",20,"richness",0,NA,NA
+"348","sponges","20q8",20,"sigma",NA,NA,NA
+"349","sponges","20q9",20,"abundance",1,NA,NA
+"350","sponges","20q9",20,"richness",1,NA,NA
+"351","sponges","20q9",20,"sigma",0.0896093888935205,NA,NA
+"352","sponges","50q1",50,"abundance",2,NA,NA
+"353","sponges","50q1",50,"richness",1,NA,NA
+"354","sponges","50q1",50,"sigma",0.00941169561488163,NA,NA
+"355","sponges","50q10",50,"abundance",5,NA,NA
+"356","sponges","50q10",50,"richness",3,NA,NA
+"357","sponges","50q10",50,"sigma",0.483210237665936,NA,NA
+"358","sponges","50q11",50,"abundance",3,NA,NA
+"359","sponges","50q11",50,"richness",1,NA,NA
+"360","sponges","50q11",50,"sigma",0.00714895645970715,NA,NA
+"361","sponges","50q12",50,"abundance",0,NA,NA
+"362","sponges","50q12",50,"richness",0,NA,NA
+"363","sponges","50q12",50,"sigma",NA,NA,NA
+"364","sponges","50q13",50,"abundance",9,NA,NA
+"365","sponges","50q13",50,"richness",2,NA,NA
+"366","sponges","50q13",50,"sigma",1.57430216938532,NA,NA
+"367","sponges","50q14",50,"abundance",3,NA,NA
+"368","sponges","50q14",50,"richness",2,NA,NA
+"369","sponges","50q14",50,"sigma",0.0150563559131666,NA,NA
+"370","sponges","50q15",50,"abundance",12,NA,NA
+"371","sponges","50q15",50,"richness",6,NA,NA
+"372","sponges","50q15",50,"sigma",0.328901559767622,NA,NA
+"373","sponges","50q16",50,"abundance",6,NA,NA
+"374","sponges","50q16",50,"richness",5,NA,NA
+"375","sponges","50q16",50,"sigma",0.0234870107351228,NA,NA
+"376","sponges","50q17",50,"abundance",7,NA,NA
+"377","sponges","50q17",50,"richness",5,NA,NA
+"378","sponges","50q17",50,"sigma",0.0133849612119,NA,NA
+"379","sponges","50q18",50,"abundance",5,NA,NA
+"380","sponges","50q18",50,"richness",3,NA,NA
+"381","sponges","50q18",50,"sigma",0.483210237665936,NA,NA
+"382","sponges","50q19",50,"abundance",4,NA,NA
+"383","sponges","50q19",50,"richness",4,NA,NA
+"384","sponges","50q19",50,"sigma",0.0151422846952663,NA,NA
+"385","sponges","50q2",50,"abundance",0,NA,NA
+"386","sponges","50q2",50,"richness",0,NA,NA
+"387","sponges","50q2",50,"sigma",NA,NA,NA
+"388","sponges","50q20",50,"abundance",4,NA,NA
+"389","sponges","50q20",50,"richness",3,NA,NA
+"390","sponges","50q20",50,"sigma",0.0195414609133534,NA,NA
+"391","sponges","50q21",50,"abundance",10,NA,NA
+"392","sponges","50q21",50,"richness",3,NA,NA
+"393","sponges","50q21",50,"sigma",0.466895194104789,NA,NA
+"394","sponges","50q22",50,"abundance",8,NA,NA
+"395","sponges","50q22",50,"richness",4,NA,NA
+"396","sponges","50q22",50,"sigma",0.502734348799091,NA,NA
+"397","sponges","50q23",50,"abundance",0,NA,NA
+"398","sponges","50q23",50,"richness",0,NA,NA
+"399","sponges","50q23",50,"sigma",NA,NA,NA
+"400","sponges","50q24",50,"abundance",1,NA,NA
+"401","sponges","50q24",50,"richness",1,NA,NA
+"402","sponges","50q24",50,"sigma",0.0896093888935205,NA,NA
+"403","sponges","50q25",50,"abundance",5,NA,NA
+"404","sponges","50q25",50,"richness",5,NA,NA
+"405","sponges","50q25",50,"sigma",0.0432486754923437,NA,NA
+"406","sponges","50q26",50,"abundance",2,NA,NA
+"407","sponges","50q26",50,"richness",1,NA,NA
+"408","sponges","50q26",50,"sigma",0.00941169561488163,NA,NA
+"409","sponges","50q27",50,"abundance",4,NA,NA
+"410","sponges","50q27",50,"richness",3,NA,NA
+"411","sponges","50q27",50,"sigma",0.0195414609133534,NA,NA
+"412","sponges","50q3",50,"abundance",2,NA,NA
+"413","sponges","50q3",50,"richness",1,NA,NA
+"414","sponges","50q3",50,"sigma",0.00941169561488163,NA,NA
+"415","sponges","50q4",50,"abundance",1,NA,NA
+"416","sponges","50q4",50,"richness",1,NA,NA
+"417","sponges","50q4",50,"sigma",0.0896093888935205,NA,NA
+"418","sponges","50q5",50,"abundance",0,NA,NA
+"419","sponges","50q5",50,"richness",0,NA,NA
+"420","sponges","50q5",50,"sigma",NA,NA,NA
+"421","sponges","50q6",50,"abundance",1,NA,NA
+"422","sponges","50q6",50,"richness",1,NA,NA
+"423","sponges","50q6",50,"sigma",0.0896093888935205,NA,NA
+"424","sponges","50q7",50,"abundance",2,NA,NA
+"425","sponges","50q7",50,"richness",1,NA,NA
+"426","sponges","50q7",50,"sigma",0.00941169561488163,NA,NA
+"427","sponges","50q8",50,"abundance",0,NA,NA
+"428","sponges","50q8",50,"richness",0,NA,NA
+"429","sponges","50q8",50,"sigma",NA,NA,NA
+"430","sponges","50q9",50,"abundance",0,NA,NA
+"431","sponges","50q9",50,"richness",0,NA,NA
+"432","sponges","50q9",50,"sigma",NA,NA,NA
+"433","sponges","5q1",5,"abundance",0,NA,NA
+"434","sponges","5q1",5,"richness",0,NA,NA
+"435","sponges","5q1",5,"sigma",NA,NA,NA
+"436","sponges","5q10",5,"abundance",1,NA,NA
+"437","sponges","5q10",5,"richness",1,NA,NA
+"438","sponges","5q10",5,"sigma",0.0896093888935205,NA,NA
+"439","sponges","5q11",5,"abundance",2,NA,NA
+"440","sponges","5q11",5,"richness",2,NA,NA
+"441","sponges","5q11",5,"sigma",0.107545684837639,NA,NA
+"442","sponges","5q12",5,"abundance",0,NA,NA
+"443","sponges","5q12",5,"richness",0,NA,NA
+"444","sponges","5q12",5,"sigma",NA,NA,NA
+"445","sponges","5q13",5,"abundance",0,NA,NA
+"446","sponges","5q13",5,"richness",0,NA,NA
+"447","sponges","5q13",5,"sigma",NA,NA,NA
+"448","sponges","5q14",5,"abundance",1,NA,NA
+"449","sponges","5q14",5,"richness",1,NA,NA
+"450","sponges","5q14",5,"sigma",0.0896093888935205,NA,NA
+"451","sponges","5q15",5,"abundance",1,NA,NA
+"452","sponges","5q15",5,"richness",1,NA,NA
+"453","sponges","5q15",5,"sigma",0.0896093888935205,NA,NA
+"454","sponges","5q16",5,"abundance",0,NA,NA
+"455","sponges","5q16",5,"richness",0,NA,NA
+"456","sponges","5q16",5,"sigma",NA,NA,NA
+"457","sponges","5q17",5,"abundance",0,NA,NA
+"458","sponges","5q17",5,"richness",0,NA,NA
+"459","sponges","5q17",5,"sigma",NA,NA,NA
+"460","sponges","5q18",5,"abundance",0,NA,NA
+"461","sponges","5q18",5,"richness",0,NA,NA
+"462","sponges","5q18",5,"sigma",NA,NA,NA
+"463","sponges","5q19",5,"abundance",1,NA,NA
+"464","sponges","5q19",5,"richness",1,NA,NA
+"465","sponges","5q19",5,"sigma",0.0896093888935205,NA,NA
+"466","sponges","5q2",5,"abundance",0,NA,NA
+"467","sponges","5q2",5,"richness",0,NA,NA
+"468","sponges","5q2",5,"sigma",NA,NA,NA
+"469","sponges","5q20",5,"abundance",1,NA,NA
+"470","sponges","5q20",5,"richness",1,NA,NA
+"471","sponges","5q20",5,"sigma",0.0896093888935205,NA,NA
+"472","sponges","5q21",5,"abundance",2,NA,NA
+"473","sponges","5q21",5,"richness",2,NA,NA
+"474","sponges","5q21",5,"sigma",0.107545684837639,NA,NA
+"475","sponges","5q22",5,"abundance",1,NA,NA
+"476","sponges","5q22",5,"richness",1,NA,NA
+"477","sponges","5q22",5,"sigma",0.0896093888935205,NA,NA
+"478","sponges","5q23",5,"abundance",1,NA,NA
+"479","sponges","5q23",5,"richness",1,NA,NA
+"480","sponges","5q23",5,"sigma",0.0896093888935205,NA,NA
+"481","sponges","5q26",5,"abundance",0,NA,NA
+"482","sponges","5q26",5,"richness",0,NA,NA
+"483","sponges","5q26",5,"sigma",NA,NA,NA
+"484","sponges","5q27",5,"abundance",1,NA,NA
+"485","sponges","5q27",5,"richness",1,NA,NA
+"486","sponges","5q27",5,"sigma",0.0896093888935205,NA,NA
+"487","sponges","5q28",5,"abundance",1,NA,NA
+"488","sponges","5q28",5,"richness",1,NA,NA
+"489","sponges","5q28",5,"sigma",0.0896093888935205,NA,NA
+"490","sponges","5q29",5,"abundance",0,NA,NA
+"491","sponges","5q29",5,"richness",0,NA,NA
+"492","sponges","5q29",5,"sigma",NA,NA,NA
+"493","sponges","5q3",5,"abundance",0,NA,NA
+"494","sponges","5q3",5,"richness",0,NA,NA
+"495","sponges","5q3",5,"sigma",NA,NA,NA
+"496","sponges","5q30",5,"abundance",0,NA,NA
+"497","sponges","5q30",5,"richness",0,NA,NA
+"498","sponges","5q30",5,"sigma",NA,NA,NA
+"499","sponges","5q31",5,"abundance",2,NA,NA
+"500","sponges","5q31",5,"richness",1,NA,NA
+"501","sponges","5q31",5,"sigma",0.00941169561488163,NA,NA
+"502","sponges","5q32",5,"abundance",0,NA,NA
+"503","sponges","5q32",5,"richness",0,NA,NA
+"504","sponges","5q32",5,"sigma",NA,NA,NA
+"505","sponges","5q34",5,"abundance",0,NA,NA
+"506","sponges","5q34",5,"richness",0,NA,NA
+"507","sponges","5q34",5,"sigma",NA,NA,NA
+"508","sponges","5q35",5,"abundance",0,NA,NA
+"509","sponges","5q35",5,"richness",0,NA,NA
+"510","sponges","5q35",5,"sigma",NA,NA,NA
+"511","sponges","5q36",5,"abundance",1,NA,NA
+"512","sponges","5q36",5,"richness",1,NA,NA
+"513","sponges","5q36",5,"sigma",0.0896093888935205,NA,NA
+"514","sponges","5q37",5,"abundance",0,NA,NA
+"515","sponges","5q37",5,"richness",0,NA,NA
+"516","sponges","5q37",5,"sigma",NA,NA,NA
+"517","sponges","5q38",5,"abundance",0,NA,NA
+"518","sponges","5q38",5,"richness",0,NA,NA
+"519","sponges","5q38",5,"sigma",NA,NA,NA
+"520","sponges","5q39",5,"abundance",0,NA,NA
+"521","sponges","5q39",5,"richness",0,NA,NA
+"522","sponges","5q39",5,"sigma",NA,NA,NA
+"523","sponges","5q40",5,"abundance",0,NA,NA
+"524","sponges","5q40",5,"richness",0,NA,NA
+"525","sponges","5q40",5,"sigma",NA,NA,NA
+"526","sponges","5q6",5,"abundance",0,NA,NA
+"527","sponges","5q6",5,"richness",0,NA,NA
+"528","sponges","5q6",5,"sigma",NA,NA,NA
+"529","sponges","5q7",5,"abundance",0,NA,NA
+"530","sponges","5q7",5,"richness",0,NA,NA
+"531","sponges","5q7",5,"sigma",NA,NA,NA
+"532","sponges","5q8",5,"abundance",0,NA,NA
+"533","sponges","5q8",5,"richness",0,NA,NA
+"534","sponges","5q8",5,"sigma",NA,NA,NA
+"535","sponges","5q9",5,"abundance",0,NA,NA
+"536","sponges","5q9",5,"richness",0,NA,NA
+"537","sponges","5q9",5,"sigma",NA,NA,NA
+"538","sponges","60q1",60,"abundance",3,NA,NA
+"539","sponges","60q1",60,"richness",3,NA,NA
+"540","sponges","60q1",60,"sigma",0.0521168099182725,NA,NA
+"541","sponges","60q10",60,"abundance",9,NA,NA
+"542","sponges","60q10",60,"richness",3,NA,NA
+"543","sponges","60q10",60,"sigma",0.190655164358921,NA,NA
+"544","sponges","60q11",60,"abundance",3,NA,NA
+"545","sponges","60q11",60,"richness",2,NA,NA
+"546","sponges","60q11",60,"sigma",0.0150563559131666,NA,NA
+"547","sponges","60q12",60,"abundance",8,NA,NA
+"548","sponges","60q12",60,"richness",5,NA,NA
+"549","sponges","60q12",60,"sigma",0.0326061737849961,NA,NA
+"550","sponges","60q2",60,"abundance",1,NA,NA
+"551","sponges","60q2",60,"richness",1,NA,NA
+"552","sponges","60q2",60,"sigma",0.0896093888935205,NA,NA
+"553","sponges","60q8",60,"abundance",0,NA,NA
+"554","sponges","60q8",60,"richness",0,NA,NA
+"555","sponges","60q8",60,"sigma",NA,NA,NA
+"556","stony corals","1",5,"abundance",194,NA,NA
+"557","stony corals","1",5,"richness",45,NA,NA
+"558","stony corals","1",5,"sigma",1.32069061571934,NA,NA
+"559","stony corals","2",5,"abundance",151,NA,NA
+"560","stony corals","2",5,"richness",30,NA,NA
+"561","stony corals","2",5,"sigma",1.02579509904073,NA,NA
+"562","stony corals","3",5,"abundance",182,NA,NA
+"563","stony corals","3",5,"richness",40,NA,NA
+"564","stony corals","3",5,"sigma",1.59822105779288,NA,NA
+"565","stony corals","4",5,"abundance",245,NA,NA
+"566","stony corals","4",5,"richness",46,NA,NA
+"567","stony corals","4",5,"sigma",1.04848878810081,NA,NA
+"568","stony corals","5",5,"abundance",229,NA,NA
+"569","stony corals","5",5,"richness",42,NA,NA
+"570","stony corals","5",5,"sigma",1.27083100435647,NA,NA
+"571","stony corals","1",15,"abundance",108,NA,NA
+"572","stony corals","1",15,"richness",38,NA,NA
+"573","stony corals","1",15,"sigma",1.43948124204536,NA,NA
+"574","stony corals","2",15,"abundance",207,NA,NA
+"575","stony corals","2",15,"richness",52,NA,NA
+"576","stony corals","2",15,"sigma",1.22849778247935,NA,NA
+"577","stony corals","3",15,"abundance",169,NA,NA
+"578","stony corals","3",15,"richness",55,NA,NA
+"579","stony corals","3",15,"sigma",1.12481647035949,NA,NA
+"580","stony corals","4",15,"abundance",130,NA,NA
+"581","stony corals","4",15,"richness",49,NA,NA
+"582","stony corals","4",15,"sigma",1.12145444176401,NA,NA
+"583","stony corals","5",15,"abundance",87,NA,NA
+"584","stony corals","5",15,"richness",43,NA,NA
+"585","stony corals","5",15,"sigma",2.54766010161098,NA,NA
+"586","stony corals","1",30,"abundance",74,NA,NA
+"587","stony corals","1",30,"richness",30,NA,NA
+"588","stony corals","1",30,"sigma",2.38268522594363,NA,NA
+"589","stony corals","2",30,"abundance",94,NA,NA
+"590","stony corals","2",30,"richness",32,NA,NA
+"591","stony corals","2",30,"sigma",1.78365467164613,NA,NA
+"592","stony corals","3",30,"abundance",93,NA,NA
+"593","stony corals","3",30,"richness",32,NA,NA
+"594","stony corals","3",30,"sigma",1.97472908725465,NA,NA
+"595","stony corals","4",30,"abundance",126,NA,NA
+"596","stony corals","4",30,"richness",47,NA,NA
+"597","stony corals","4",30,"sigma",1.39558169249486,NA,NA
+"598","stony corals","5",30,"abundance",130,NA,NA
+"599","stony corals","5",30,"richness",42,NA,NA
+"600","stony corals","5",30,"sigma",1.50393713727835,NA,NA
+"601","stony corals","1",45,"abundance",141,NA,NA
+"602","stony corals","1",45,"richness",48,NA,NA
+"603","stony corals","1",45,"sigma",1.37446739639323,NA,NA
+"604","stony corals","2",45,"abundance",169,NA,NA
+"605","stony corals","2",45,"richness",49,NA,NA
+"606","stony corals","2",45,"sigma",1.82707819114455,NA,NA
+"607","stony corals","3",45,"abundance",94,NA,NA
+"608","stony corals","3",45,"richness",30,NA,NA
+"609","stony corals","3",45,"sigma",1.96304253927883,NA,NA
+"610","stony corals","4",45,"abundance",124,NA,NA
+"611","stony corals","4",45,"richness",43,NA,NA
+"612","stony corals","4",45,"sigma",1.23860000294058,NA,NA
+"613","stony corals","5",45,"abundance",148,NA,NA
+"614","stony corals","5",45,"richness",39,NA,NA
+"615","stony corals","5",45,"sigma",18.514897888268,NA,NA
+"616","stony corals","1",55,"abundance",325,NA,NA
+"617","stony corals","1",55,"richness",46,NA,NA
+"618","stony corals","1",55,"sigma",3.08375257535851,NA,NA
+"619","stony corals","2",55,"abundance",206,NA,NA
+"620","stony corals","2",55,"richness",40,NA,NA
+"621","stony corals","2",55,"sigma",1.91513807774693,NA,NA
+"622","stony corals","3",55,"abundance",145,NA,NA
+"623","stony corals","3",55,"richness",44,NA,NA
+"624","stony corals","3",55,"sigma",2.27794567932677,NA,NA
+"625","stony corals","4",55,"abundance",276,NA,NA
+"626","stony corals","4",55,"richness",51,NA,NA
+"627","stony corals","4",55,"sigma",2.10381519805486,NA,NA
+"628","stony corals","5",55,"abundance",229,NA,NA
+"629","stony corals","5",55,"richness",48,NA,NA
+"630","stony corals","5",55,"sigma",1.87076476529862,NA,NA
+"631","soft corals","1",35,"abundance",65,NA,NA
+"632","soft corals","1",35,"richness",4,NA,NA
+"633","soft corals","1",35,"sigma",3.54093637821986,NA,NA
+"634","soft corals","2",35,"abundance",12,NA,NA
+"635","soft corals","2",35,"richness",4,NA,NA
+"636","soft corals","2",35,"sigma",0.869197134879633,NA,NA
+"637","soft corals","3",35,"abundance",12,NA,NA
+"638","soft corals","3",35,"richness",5,NA,NA
+"639","soft corals","3",35,"sigma",0.0074847145544716,NA,NA
+"640","soft corals","4",35,"abundance",35,NA,NA
+"641","soft corals","4",35,"richness",2,NA,NA
+"642","soft corals","4",35,"sigma",0.37946416047021,NA,NA
+"643","soft corals","5",35,"abundance",15,NA,NA
+"644","soft corals","5",35,"richness",3,NA,NA
+"645","soft corals","5",35,"sigma",0.00456497816221655,NA,NA
+"646","soft corals","6",35,"abundance",63,NA,NA
+"647","soft corals","6",35,"richness",3,NA,NA
+"648","soft corals","6",35,"sigma",2.44289960382037,NA,NA
+"649","soft corals","7",35,"abundance",6,NA,NA
+"650","soft corals","7",35,"richness",2,NA,NA
+"651","soft corals","7",35,"sigma",0.00839019036989545,NA,NA
+"652","soft corals","8",40,"abundance",10,NA,NA
+"653","soft corals","8",40,"richness",4,NA,NA
+"654","soft corals","8",40,"sigma",6.17727702390082,NA,NA
+"655","soft corals","9",40,"abundance",11,NA,NA
+"656","soft corals","9",40,"richness",3,NA,NA
+"657","soft corals","9",40,"sigma",4.2237319651418,NA,NA
+"658","soft corals","10",40,"abundance",24,NA,NA
+"659","soft corals","10",40,"richness",2,NA,NA
+"660","soft corals","10",40,"sigma",3.71030623839717,NA,NA
+"661","soft corals","11",40,"abundance",12,NA,NA
+"662","soft corals","11",40,"richness",5,NA,NA
+"663","soft corals","11",40,"sigma",0.226919701185404,NA,NA
+"664","soft corals","12",40,"abundance",124,NA,NA
+"665","soft corals","12",40,"richness",6,NA,NA
+"666","soft corals","12",40,"sigma",5.63049040495679,NA,NA
+"667","soft corals","13",40,"abundance",13,NA,NA
+"668","soft corals","13",40,"richness",4,NA,NA
+"669","soft corals","13",40,"sigma",1.08864037196425,NA,NA
+"670","soft corals","14",40,"abundance",36,NA,NA
+"671","soft corals","14",40,"richness",4,NA,NA
+"672","soft corals","14",40,"sigma",2.54082667514132,NA,NA
+"673","soft corals","15",45,"abundance",70,NA,NA
+"674","soft corals","15",45,"richness",5,NA,NA
+"675","soft corals","15",45,"sigma",2.71143307534948,NA,NA
+"676","soft corals","16",45,"abundance",46,NA,NA
+"677","soft corals","16",45,"richness",8,NA,NA
+"678","soft corals","16",45,"sigma",3.33939916668707,NA,NA
+"679","soft corals","17",45,"abundance",3,NA,NA
+"680","soft corals","17",45,"richness",2,NA,NA
+"681","soft corals","17",45,"sigma",0.0150563559131666,NA,NA
+"682","soft corals","18",45,"abundance",8,NA,NA
+"683","soft corals","18",45,"richness",4,NA,NA
+"684","soft corals","18",45,"sigma",0.502734348799091,NA,NA
+"685","soft corals","19",45,"abundance",36,NA,NA
+"686","soft corals","19",45,"richness",5,NA,NA
+"687","soft corals","19",45,"sigma",1.71734199685435,NA,NA
+"688","soft corals","20",45,"abundance",5,NA,NA
+"689","soft corals","20",45,"richness",5,NA,NA
+"690","soft corals","20",45,"sigma",0.0432486754923437,NA,NA
+"691","soft corals","21",45,"abundance",61,NA,NA
+"692","soft corals","21",45,"richness",8,NA,NA
+"693","soft corals","21",45,"sigma",3.62160055282055,NA,NA
+"694","soft corals","22",35,"abundance",62,NA,NA
+"695","soft corals","22",35,"richness",5,NA,NA
+"696","soft corals","22",35,"sigma",2.95142030089951,NA,NA
+"697","soft corals","23",35,"abundance",65,NA,NA
+"698","soft corals","23",35,"richness",2,NA,NA
+"699","soft corals","23",35,"sigma",1.16825001460851,NA,NA
+"700","soft corals","24",35,"abundance",68,NA,NA
+"701","soft corals","24",35,"richness",4,NA,NA
+"702","soft corals","24",35,"sigma",6.24954688784717,NA,NA
+"703","soft corals","25",35,"abundance",150,NA,NA
+"704","soft corals","25",35,"richness",9,NA,NA
+"705","soft corals","25",35,"sigma",2.50601415100441,NA,NA
+"706","soft corals","26",35,"abundance",51,NA,NA
+"707","soft corals","26",35,"richness",5,NA,NA
+"708","soft corals","26",35,"sigma",2.54839644373749,NA,NA
+"709","soft corals","27",35,"abundance",29,NA,NA
+"710","soft corals","27",35,"richness",7,NA,NA
+"711","soft corals","27",35,"sigma",1.15340576329774,NA,NA
+"712","soft corals","28",35,"abundance",45,NA,NA
+"713","soft corals","28",35,"richness",8,NA,NA
+"714","soft corals","28",35,"sigma",0.586330989345594,NA,NA
+"715","soft corals","29",35,"abundance",68,NA,NA
+"716","soft corals","29",35,"richness",6,NA,NA
+"717","soft corals","29",35,"sigma",1.56101906684822,NA,NA
+"718","soft corals","30",40,"abundance",19,NA,NA
+"719","soft corals","30",40,"richness",4,NA,NA
+"720","soft corals","30",40,"sigma",0.370920292265438,NA,NA
+"721","soft corals","31",40,"abundance",35,NA,NA
+"722","soft corals","31",40,"richness",8,NA,NA
+"723","soft corals","31",40,"sigma",2.68278178948007,NA,NA
+"724","soft corals","32",40,"abundance",47,NA,NA
+"725","soft corals","32",40,"richness",4,NA,NA
+"726","soft corals","32",40,"sigma",1.07021872005062,NA,NA
+"727","soft corals","33",40,"abundance",93,NA,NA
+"728","soft corals","33",40,"richness",7,NA,NA
+"729","soft corals","33",40,"sigma",3.01465088549333,NA,NA
+"730","soft corals","34",40,"abundance",80,NA,NA
+"731","soft corals","34",40,"richness",8,NA,NA
+"732","soft corals","34",40,"sigma",1.53731950040586,NA,NA
+"733","soft corals","35",40,"abundance",83,NA,NA
+"734","soft corals","35",40,"richness",6,NA,NA
+"735","soft corals","35",40,"sigma",1.84597865931184,NA,NA
+"736","soft corals","36",40,"abundance",24,NA,NA
+"737","soft corals","36",40,"richness",8,NA,NA
+"738","soft corals","36",40,"sigma",17.2489579014625,NA,NA
+"739","soft corals","37",40,"abundance",56,NA,NA
+"740","soft corals","37",40,"richness",8,NA,NA
+"741","soft corals","37",40,"sigma",1.25835990557242,NA,NA
+"742","soft corals","38",45,"abundance",68,NA,NA
+"743","soft corals","38",45,"richness",3,NA,NA
+"744","soft corals","38",45,"sigma",1.92184029441687,NA,NA
+"745","soft corals","39",45,"abundance",12,NA,NA
+"746","soft corals","39",45,"richness",5,NA,NA
+"747","soft corals","39",45,"sigma",0.89159933962823,NA,NA
+"748","soft corals","40",45,"abundance",21,NA,NA
+"749","soft corals","40",45,"richness",3,NA,NA
+"750","soft corals","40",45,"sigma",1.67675209579601,NA,NA
+"751","soft corals","41",45,"abundance",42,NA,NA
+"752","soft corals","41",45,"richness",2,NA,NA
+"753","soft corals","41",45,"sigma",0.187471486296061,NA,NA
+"754","soft corals","42",45,"abundance",37,NA,NA
+"755","soft corals","42",45,"richness",8,NA,NA
+"756","soft corals","42",45,"sigma",2.54232391987177,NA,NA
+"757","soft corals","43",45,"abundance",48,NA,NA
+"758","soft corals","43",45,"richness",4,NA,NA
+"759","soft corals","43",45,"sigma",2.53725140065522,NA,NA
+"760","soft corals","44",45,"abundance",30,NA,NA
+"761","soft corals","44",45,"richness",7,NA,NA
+"762","soft corals","44",45,"sigma",17.9411327557239,NA,NA
+"763","soft corals","45",45,"abundance",41,NA,NA
+"764","soft corals","45",45,"richness",4,NA,NA
+"765","soft corals","45",45,"sigma",1.44413305984341,NA,NA
+"766","soft corals","46",1,"abundance",13,NA,NA
+"767","soft corals","46",1,"richness",2,NA,NA
+"768","soft corals","46",1,"sigma",0.00776659634444875,NA,NA
+"769","soft corals","47",1,"abundance",16,NA,NA
+"770","soft corals","47",1,"richness",4,NA,NA
+"771","soft corals","47",1,"sigma",1.36258688305003,NA,NA
+"772","soft corals","48",1,"abundance",31,NA,NA
+"773","soft corals","48",1,"richness",3,NA,NA
+"774","soft corals","48",1,"sigma",0.769008303666294,NA,NA
+"775","soft corals","49",1,"abundance",29,NA,NA
+"776","soft corals","49",1,"richness",6,NA,NA
+"777","soft corals","49",1,"sigma",0.994428600858476,NA,NA
+"778","soft corals","50",1,"abundance",13,NA,NA
+"779","soft corals","50",1,"richness",4,NA,NA
+"780","soft corals","50",1,"sigma",0.0102142110310765,NA,NA
+"781","soft corals","51",1,"abundance",17,NA,NA
+"782","soft corals","51",1,"richness",4,NA,NA
+"783","soft corals","51",1,"sigma",0.791426769824372,NA,NA
+"784","soft corals","52",1,"abundance",28,NA,NA
+"785","soft corals","52",1,"richness",6,NA,NA
+"786","soft corals","52",1,"sigma",0.0125733339256464,NA,NA
+"787","soft corals","53",1,"abundance",12,NA,NA
+"788","soft corals","53",1,"richness",3,NA,NA
+"789","soft corals","53",1,"sigma",0.817822995252478,NA,NA
+"790","soft corals","54",1,"abundance",185,NA,NA
+"791","soft corals","54",1,"richness",7,NA,NA
+"792","soft corals","54",1,"sigma",1.01702927889486,NA,NA
+"793","soft corals","55",1,"abundance",59,NA,NA
+"794","soft corals","55",1,"richness",5,NA,NA
+"795","soft corals","55",1,"sigma",1.52462875393511,NA,NA
+"796","soft corals","56",1,"abundance",34,NA,NA
+"797","soft corals","56",1,"richness",1,NA,NA
+"798","soft corals","56",1,"sigma",0.00225975900186096,NA,NA
+"799","soft corals","57",1,"abundance",44,NA,NA
+"800","soft corals","57",1,"richness",3,NA,NA
+"801","soft corals","57",1,"sigma",0.730425995713504,NA,NA
+"802","soft corals","58",1,"abundance",25,NA,NA
+"803","soft corals","58",1,"richness",4,NA,NA
+"804","soft corals","58",1,"sigma",2.27510474747876,NA,NA
+"805","soft corals","59",1,"abundance",95,NA,NA
+"806","soft corals","59",1,"richness",4,NA,NA
+"807","soft corals","59",1,"sigma",1.18970360819245,NA,NA
+"808","soft corals","60",1,"abundance",47,NA,NA
+"809","soft corals","60",1,"richness",2,NA,NA
+"810","soft corals","60",1,"sigma",1.96522718083702,NA,NA
+"811","soft corals","61",1,"abundance",26,NA,NA
+"812","soft corals","61",1,"richness",4,NA,NA
+"813","soft corals","61",1,"sigma",1.53719639717509,NA,NA
+"814","soft corals","62",1,"abundance",70,NA,NA
+"815","soft corals","62",1,"richness",4,NA,NA
+"816","soft corals","62",1,"sigma",0.977109971472528,NA,NA
+"817","soft corals","63",1,"abundance",28,NA,NA
+"818","soft corals","63",1,"richness",3,NA,NA
+"819","soft corals","63",1,"sigma",1.15313043755547,NA,NA
+"820","soft corals","64",1,"abundance",186,NA,NA
+"821","soft corals","64",1,"richness",4,NA,NA
+"822","soft corals","64",1,"sigma",2.05578864678417,NA,NA
+"823","soft corals","65",1,"abundance",61,NA,NA
+"824","soft corals","65",1,"richness",2,NA,NA
+"825","soft corals","65",1,"sigma",0.00208488113723031,NA,NA
+"826","soft corals","66",1,"abundance",27,NA,NA
+"827","soft corals","66",1,"richness",3,NA,NA
+"828","soft corals","66",1,"sigma",2.03878223938786,NA,NA
+"829","soft corals","67",1,"abundance",8,NA,NA
+"830","soft corals","67",1,"richness",3,NA,NA
+"831","soft corals","67",1,"sigma",0.0116458843620061,NA,NA
+"832","soft corals","68",3,"abundance",164,NA,NA
+"833","soft corals","68",3,"richness",2,NA,NA
+"834","soft corals","68",3,"sigma",0.00177673896342994,NA,NA
+"835","soft corals","69",3,"abundance",105,NA,NA
+"836","soft corals","69",3,"richness",5,NA,NA
+"837","soft corals","69",3,"sigma",1.64141166092728,NA,NA
+"838","soft corals","70",3,"abundance",9,NA,NA
+"839","soft corals","70",3,"richness",3,NA,NA
+"840","soft corals","70",3,"sigma",4.08273344351772,NA,NA
+"841","soft corals","71",3,"abundance",161,NA,NA
+"842","soft corals","71",3,"richness",8,NA,NA
+"843","soft corals","71",3,"sigma",2.21954721218739,NA,NA
+"844","soft corals","72",3,"abundance",43,NA,NA
+"845","soft corals","72",3,"richness",4,NA,NA
+"846","soft corals","72",3,"sigma",1.65908619518871,NA,NA
+"847","soft corals","73",3,"abundance",35,NA,NA
+"848","soft corals","73",3,"richness",2,NA,NA
+"849","soft corals","73",3,"sigma",0.55052750283407,NA,NA
+"850","soft corals","74",3,"abundance",183,NA,NA
+"851","soft corals","74",3,"richness",4,NA,NA
+"852","soft corals","74",3,"sigma",2.65335540285848,NA,NA
+"853","soft corals","75",3,"abundance",13,NA,NA
+"854","soft corals","75",3,"richness",3,NA,NA
+"855","soft corals","75",3,"sigma",0.0057653177782276,NA,NA
+"856","soft corals","76",3,"abundance",15,NA,NA
+"857","soft corals","76",3,"richness",3,NA,NA
+"858","soft corals","76",3,"sigma",0.0237778262088023,NA,NA
+"859","soft corals","77",3,"abundance",19,NA,NA
+"860","soft corals","77",3,"richness",5,NA,NA
+"861","soft corals","77",3,"sigma",0.883450807953622,NA,NA
+"862","soft corals","78",3,"abundance",58,NA,NA
+"863","soft corals","78",3,"richness",5,NA,NA
+"864","soft corals","78",3,"sigma",0.637521930861244,NA,NA
+"865","soft corals","79",3,"abundance",36,NA,NA
+"866","soft corals","79",3,"richness",7,NA,NA
+"867","soft corals","79",3,"sigma",0.227539916552623,NA,NA
+"868","soft corals","80",3,"abundance",50,NA,NA
+"869","soft corals","80",3,"richness",6,NA,NA
+"870","soft corals","80",3,"sigma",1.15145426169522,NA,NA
