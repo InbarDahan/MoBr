@@ -183,6 +183,41 @@ soft_sum$sigma <- sigma_values_sf
 # _______________________________________________________________
 # _______________________________________________________________
 
+
+
+       # Aggregations using 
+                      # per sample:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # renaming columns before combining the data frames:
 fish_sum <- fish_sum %>% rename(sample = OpCode)
 sponges_sum <- sponges_sum %>% rename(sample = quad)
@@ -194,8 +229,8 @@ fish_sum <- fish_sum %>% rename(lat = lat_y)
 # adding a column for the taxonomic groups id:
 fish_sum$taxon <- 'fish'
 sponges_sum$taxon <- 'sponges'
-stony_sum$taxon <- 'corals stony'
-soft_sum$taxon <- 'corals soft'
+stony_sum$taxon <- 'stony corals'
+soft_sum$taxon <- 'soft corals'
 # _______________________________________________________________
 
 # Select the relevant columns from each data frame
@@ -218,31 +253,6 @@ write.csv(combined_data, file = "combined_data.csv")
 # ________________________________________________________________
 
 # ________________________________________________________________
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 # creating another df format to allow faceted graphs:
@@ -311,6 +321,8 @@ write.csv(df_final, file = "NR_SOUTH_data.csv")
 # ________________________________________________________________
 
 # ________________________________________________________________
+
+
 
            # filter data - by features 
 

@@ -15,14 +15,14 @@ library(egg)
 devtools::install_version("broom", version = "0.5.4", repos = "http://cran.us.r-project.org")
 library(broom)
 
-wd <-  "C:/Users/inbar/OneDrive/desktop/r/chapter_2/MoBr"
+wd <-  "C:/Users/inbar/OneDrive/desktop/r/chapter_2/MoBr/suppl/gradients"
 
 setwd(wd)
 
 # read in data file
-ant_dat <- read.csv('./suppl/gradients/smokies_all.csv')
+ant_dat <- read.csv('smokies_all.csv')
 names(ant_dat)    # gives the names of the columns
-ant_mob_in <- make_mob_in(ant_dat[ , 5:42], ant_dat[ c(1:4, 43:50)], # define the sp matrix and the variables
+ant_mob_in <- make_mob_in(ant_dat[ , 6:43], ant_dat[ c(1:5, 44:51)], # define the sp matrix and the variables
                           coord_names = c('sample_x', 'sample_y'))   # define coor - 
 
 # drop site with low number of individuals
@@ -48,15 +48,23 @@ length(which(ant_dat$sample_abu >= 5)) # 110\123 # this might be the problam in 
 
 ## compute mob stats-------------------
 
- ### They chanrged the function from get_mob_stat to that and now it doesn't work for me ###
+ ### They changed the function from get_mob_stat to that and now it doesn't work for me ###
 
-stats_a <- calc_comm_div(ant_dat[ , 5:42],
+stats_a <- calc_comm_div(ant_dat[ , 6:42],
                       index = c('N', 'S' ,'S_n', 's_C'),
+                      extrapolate = TRUE,
                        effort = c(15, 80))
 
-plot(stats_a)
+indices <- c('N', 'S', 'S_n', 'S_C')
+stats_a  <- tibble(ant_dat[ , 6:43]) %>%
+  group_by(group = ant_dat[ c(1:5, 44:51)]$site) %>%
+  group_modify(~ calc_comm_div(.x, index = indices, effort = c(15,80),
+                               extrapolate = TRUE,
+                               ))
 
-alphas_a <- stats_a$samples_stats
+plot_comm_div(stats_a)
+
+alphas_a <- stats_a$scale[""]
 alphas_a$elevation <- ant_dat$elevation_m[match(alphas_a$group, ant_dat$site)]
 
 gammas_a <- stats_a$groups_stats  

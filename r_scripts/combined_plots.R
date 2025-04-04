@@ -20,6 +20,8 @@ wd_processed_data <- "C:/Users/inbar/OneDrive/desktop/r/chapter_2/MoBr/data/proc
 setwd(wd_processed_data)
 taxon_data <- read.csv('combined_data.csv')
 taxon_data <- taxon_data %>% dplyr::select(-X)
+taxon_data$taxon <- factor(taxon_data$taxon, 
+        levels = c("fish", "stony corals", "soft corals", "sponges"))
 
 taxon_long <- read.csv('combined_long.csv')
 taxon_long <- taxon_long %>% dplyr::select(-X)
@@ -40,7 +42,8 @@ ggplot(taxon_data, aes(x = depth, y = abundance, color = taxon)) +
   theme(
     plot.title = element_text(hjust = 0.5)  # Center the title
   )
-# _______________________________________________________________
+
+# - - - - - - -
 
 # Create abundance\depth plot:
 
@@ -59,7 +62,7 @@ ggplot(taxon_data, aes(x = depth, y = abundance, color = taxon)) +
   )+ facet_wrap(~ taxon)
 
 
-
+# _______________________________________________________________
 
             # Create richness\depth plot:
 
@@ -76,6 +79,25 @@ ggplot(taxon_data, aes(x = depth, y = richness, color = taxon)) +
   theme(
     plot.title = element_text(hjust = 0.5)  # Center the title
   )
+
+# - - - - - - -
+
+# Create richness\depth plot:
+
+ggplot(taxon_data, aes(x = depth, y = richness, color = taxon)) +
+  geom_point() +
+  #geom_smooth(method = "loess", se = FALSE) +  # Add a trend line for each taxon
+  labs(
+    title = "Richness vs. Depth",
+    x = "Depth (m)",
+    y = "Richness per sample",
+    color = "Taxonomic Group"
+  )  + 
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5)  # Center the title
+  )+ facet_wrap(~ taxon)
+
 # _______________________________________________________________
 
             # facet plot measures\depth for each taxon:
@@ -144,7 +166,7 @@ ggplot(NR_SOUTH_data, aes(x = depth, y = value, color = taxon)) +
 
 
 
-
+##############################################################################3
 
 # other design options:
 
@@ -176,19 +198,3 @@ ggplot(taxon_long, aes(x = depth, y = value, color = taxon)) +
     subtitle = "Comparing Taxonomic Groups by Measure"
   ) +
   scale_color_manual(values = c("purple","darkred", "steelblue", "darkgreen"))  # Softer, professional colors
-
-
-# Facet plot of diversity measures by depth for each taxon with updated colors
-ggplot(NR_SOUTH_data, aes(x = depth, y = value, color = taxon)) +  
-  geom_point() + 
-  geom_smooth(method = "lm", se = FALSE) +
-  ggh4x::facet_grid2(taxon ~ diversity_measure, scales = "free_y", independent = "y") +   
-  theme_minimal() +
-  theme(
-    strip.placement = "outside",  
-    strip.text.y.left = element_text(angle = 0),  
-    plot.title = element_text(hjust = 0.5),  
-    legend.title = element_blank()
-  ) +
-  labs(x = "Depth (m)", y = "Value", title = "Diversity Measures by Taxonomic Groups (NR SOUTH)") +
-  scale_color_manual(values = c("purple","#1B4F72", "#28B463", "#F1C40F"))  # Updated colors
