@@ -1,5 +1,6 @@
 
-                      # stony corals data preparations
+                     
+                 # stony corals data preparations
 
 library(dplyr)
 library(tidyr)
@@ -8,6 +9,7 @@ library(mapview)
 
 wd_raw_data <- "C:/Users/inbar/OneDrive/desktop/r/chapter_2/MoBr/data/raw" 
 wd_processed_data <- "C:/Users/inbar/OneDrive/desktop/r/chapter_2/MoBr/data/processed" 
+wd_coor <- "C:/Users/inbar/OneDrive/desktop/r/chapter_2/MoBr/data/raw/stony_coor"
 
 # read data
 setwd(wd_raw_data)
@@ -26,9 +28,11 @@ stony$lat <- NA
 # move this columns after the plot column:
 stony <- stony %>% relocate(lon, lat, .after = plot)
 
-######################################
-# reconstruct the coordinates values
-
+###################################################
+setwd(wd_coor)
+# read coor:
+coor <- read.csv("stony_coor_f.csv")
+##################################################
 
 # remove soft corals
 stony_rm_octa <- stony %>% filter(!grepl("Octocorallia", Comment, ignore.case = TRUE))

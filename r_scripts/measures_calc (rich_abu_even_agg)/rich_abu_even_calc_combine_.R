@@ -1,6 +1,8 @@
       
 
-          # creating a combined data frame for the plots
+         # CALCULATING MEASURES: RICH, ABU, EVEN
+
+      # creating a combined data frame for the plots
 
 # libraries:
 library(dplyr)
@@ -62,6 +64,7 @@ soft_sum <- soft_corals %>%
   dplyr::select(site,depth, sample, lon, lat, richness, abundance)
 # _______________________________________________________________
 # _______________________________________________________________
+
 
        # evenness using Poisson distribution (sigma)
                       # per sample:
@@ -183,42 +186,20 @@ soft_sum$sigma <- sigma_values_sf
 # _______________________________________________________________
 # _______________________________________________________________
 
+               # Intraspesific Aggregations 
 
+# will be calculated separately, because the negative binomial method
+# do not produce a value per sample but a value per species, so it's not
+# possible to combine the two data sets together.
 
-       # Aggregations using 
-                      # per sample:
+# the script is called: "agg_per_species_calc"
 
+# _______________________________________________________________
+# _______________________________________________________________
 
+# Cleaning and combining the data
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# renaming columns before combining the data frames:
+# renaming columns:
 fish_sum <- fish_sum %>% rename(sample = OpCode)
 sponges_sum <- sponges_sum %>% rename(sample = quad)
 stony_sum <- stony_sum %>% rename(sample = plot)
@@ -244,7 +225,8 @@ soft_selected <- soft_sum[, c("taxon", "sample", "depth", "lon", "lat", "richnes
 combined_data <- rbind(fish_selected, sponges_selected, stony_selected, soft_selected)
 combined_data$lon[combined_data$lon == 0] <- NA
 combined_data$lat[combined_data$lat == 0] <- NA
- # _______________________________________________________________
+# _______________________________________________________________
+
 
 ## save:
 setwd(wd_processed_data)
@@ -267,6 +249,25 @@ write.csv(combined_long, file = "combined_long.csv")
 # ________________________________________________________________
 
 # ________________________________________________________________
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
              # filter data - by location (NR SOUTH)
 

@@ -40,7 +40,7 @@ first_species <- 7
 # create species metric
 sp_matric <- wide_red[,first_species:length(wide_red)]
 
-# if binned data required:
+# binning the data:
 # 8.1 - 149 m to - 15 m bins (10 breaks)
 red_depth_bins <-  wide_red %>% mutate(depth_group = cut(wide_red$depth,                                         
                    breaks=c(0, 15, 30, 45, 60, 75, 90, 105, 120, 135, 149),
