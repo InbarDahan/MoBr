@@ -19,13 +19,13 @@ setwd(wd_processed_data)
 fish <- read.csv("wide_red.csv")
 sponges <- read.csv("sponges_data.csv")
 stony <- read.csv("stony_wide_data.csv")
-soft_corals <- read.csv("soft_data.csv")
+soft <- read.csv("soft_data.csv")
 #stony_s <- read.csv("stony_wide_species_data.csv") # unused for now - just species and not other taxonomic levels
 
 fish = fish %>% dplyr::select(-X) 
 stony  = stony %>% dplyr::select(-X) 
-soft_corals = soft_corals %>% dplyr::select(-X) 
-#stony_s  = stony_s %>% dplyr::select(-X) 
+soft = soft %>% dplyr::select(-X) 
+#stony_s  = stony_s %>% dplyr::select(-X) z
 # _______________________________________________________________
 
          # calculate sample abundance and richness 
@@ -58,13 +58,12 @@ stony_sum <- stony %>%
 ## soft corals:
 first_species_sf <- 6
 
-soft_sum <- soft_corals %>% 
-  mutate(abundance = rowSums(soft_corals[,first_species_sf:length(soft_corals)])) %>%
-  mutate(richness = rowSums(soft_corals[, first_species_sf:ncol(soft_corals)] > 0)) %>%
+soft_sum <- soft %>% 
+  mutate(abundance = rowSums(soft[,first_species_sf:length(soft)])) %>%
+  mutate(richness = rowSums(soft[, first_species_sf:ncol(soft)] > 0)) %>%
   dplyr::select(site,depth, sample, lon, lat, richness, abundance)
 # _______________________________________________________________
 # _______________________________________________________________
-
 
        # evenness using Poisson distribution (sigma)
                       # per sample:
@@ -160,7 +159,7 @@ stony_sum$sigma <- sigma_values_st
 
 ## soft corals:
 
-species_matrix_sf <- soft_corals[,first_species_sf:length(soft_corals)] 
+species_matrix_sf <- soft[,first_species_sf:length(soft)] 
 
 # Create an empty vector to store the sigma values
 sigma_values_sf <- numeric(nrow(species_matrix_sf))
@@ -192,7 +191,7 @@ soft_sum$sigma <- sigma_values_sf
 # do not produce a value per sample but a value per species, so it's not
 # possible to combine the two data sets together.
 
-# the script is called: "agg_per_species_calc"
+# the script is called: "agg_muliple_methods_consistency _check.r"
 
 # _______________________________________________________________
 # _______________________________________________________________
@@ -210,8 +209,8 @@ fish_sum <- fish_sum %>% rename(lat = lat_y)
 # adding a column for the taxonomic groups id:
 fish_sum$taxon <- 'fish'
 sponges_sum$taxon <- 'sponges'
-stony_sum$taxon <- 'stony corals'
-soft_sum$taxon <- 'soft corals'
+stony_sum$taxon <- 'stony'
+soft_sum$taxon <- 'soft'
 # _______________________________________________________________
 
 # Select the relevant columns from each data frame
@@ -249,13 +248,6 @@ write.csv(combined_long, file = "combined_long.csv")
 # ________________________________________________________________
 
 # ________________________________________________________________
-
-
-
-
-
-
-
 
 
 

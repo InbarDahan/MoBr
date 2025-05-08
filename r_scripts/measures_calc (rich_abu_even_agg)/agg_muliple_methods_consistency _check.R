@@ -32,7 +32,7 @@ sponges <- read.csv("sponges_data.csv")
 stony <- read.csv("stony_wide_data.csv")
 soft <- read.csv("soft_data.csv")
 
-fish = fish %>% dplyr::select(-X) 
+fish = fish %>% dplyr::select(c(-X)) 
 stony  = stony %>% dplyr::select(-X) 
 soft = soft %>% dplyr::select(-X) 
 # _______________________________________________________________
@@ -69,8 +69,6 @@ fish <- fish %>% mutate(depth_group = cut(fish$depth,
 
 fish    <- fish %>% dplyr::select(-sea, -temperature)
 sponges <- sponges %>% dplyr::select(-Habitat, -Site)
-soft    <- soft %>% dplyr::select(-site)
-stony   <- stony %>% dplyr::select(-site)
 # ------------
 
 taxon_list <- list(fish = fish, sponges = sponges, stony = stony, soft = soft)
@@ -127,7 +125,7 @@ agg_results <- map_dfr(names(taxon_list), function(taxon_name) {
   df <- taxon_list[[taxon_name]]
   
   df_long <- df %>%
-    pivot_longer(cols = 6:ncol(.), names_to = "species", values_to = "abundance") %>%
+    pivot_longer(cols = 7:ncol(.), names_to = "species", values_to = "abundance") %>%
     filter(abundance > 0)  # exclude species not observed
   
   df_grouped <- df_long %>%
@@ -183,7 +181,7 @@ ggplot(agg_long, aes(x = depth_group_numeric, y = value)) +
 df <- taxon_list[['fish']]
 
 df_long <- df %>%
-  pivot_longer(cols = 6:ncol(.), names_to = "species", values_to = "abundance") %>%
+  pivot_longer(cols = 7:ncol(.), names_to = "species", values_to = "abundance") %>%
   filter(abundance > 0)  # exclude species not observed
 
 df_grouped <- df_long %>%
@@ -223,17 +221,17 @@ ggplot(df_grouped_long, aes(x = depth_group_numeric, y = value)) +
     strip.text = element_text(size = 9)
   )
 
-
-
-
-##############
+# ___________________________________________________
 
 # Conclusions:
-# the results are consistent among the methods
-# as well with the mobr analysis for the fish:
-# aggregations are higher around 30 m and then go down.
+# the results are quit consistent among the methods
+# BUT THEY ARE NOT CONSISTENT WITH the mobr analysis for the fish:
+# aggregations are lower around 30 m.
 
 # next step - choose a method and add it to the general graph:
+# - I prefer the J index becaue it was used in a paper I read to evaluate agg. 
+# - the other methods were mentioned as well but in general, without specific calculation.
+# - k looks noisy and morisita look similar to J
 
 # save J index to add it to the main graph:
 j_results <- agg_long %>% filter(metric == "J")
@@ -245,14 +243,96 @@ j_results_clean <- j_results %>% as.data.frame() %>% filter(!is.na(value))%>%
 setwd(wd_processed_data)
 write.csv(j_results_clean, "agg_j_results.csv")
 
+# ___________________________________________________
 
 
 
+                # Double check 
+
+# - controlling for the uneven sampling effort among
+# depth layers by sampling the in number of samples per layer and averaging the results
+
+n_iter <- 50
+
+agg_results_avr_4 <- map_dfr(names(taxon_list), function(taxon_name) {
+  df <- taxon_list[[taxon_name]]
+  
+  metrics_list <- vector("list", n_iter)
+  
+  for (i in 1:n_iter) {
+    df_long <- df %>%
+      pivot_longer(cols = 7:ncol(.), names_to = "species", values_to = "abundance") %>%
+      filter(abundance > 0)
+    
+    df_long <- df_long %>%
+      mutate(depth_group = as.character(depth_group)) %>%
+      group_by(depth_group) %>%
+      group_modify(~ {
+        if (n_distinct(.x$sample) >= 4) {
+          sampled_ids <- sample(unique(.x$sample), 4)
+          .x %>% filter(sample %in% sampled_ids)
+        } else {
+          tibble()
+        }
+      }) %>%
+      ungroup()
+    
+    df_grouped <- df_long %>%
+      group_by(depth_group, species) %>%
+      summarise(
+        abund_vec = list(abundance),
+        .groups = "drop"
+      ) %>%
+      mutate(
+        J = map_dbl(abund_vec, calc_J),
+        k = map_dbl(abund_vec, calc_k),
+        morisita = map_dbl(abund_vec, calc_morisita),
+        iter = i
+      )
+    
+    metrics_list[[i]] <- df_grouped
+  }
+  
+  # Combine all iterations, then average
+  all_iters <- bind_rows(metrics_list) %>%
+    group_by(depth_group, species) %>%
+    summarise(
+      J = mean(J, na.rm = TRUE),
+      k = mean(k, na.rm = TRUE),
+      morisita = mean(morisita, na.rm = TRUE),
+      taxon = taxon_name,
+      .groups = "drop"
+    )
+  
+  return(all_iters)
+})
 
 
+# Convert depth_group to numeric if possible (for better spacing on x-axis)
+agg_results_avr_4 <- agg_results_avr_4 %>%
+  mutate(depth_group_numeric = as.numeric(as.character(depth_group)))
 
+# Pivot longer to make it tidy for ggplot
+agg_long <- agg_results_avr_4 %>%
+  pivot_longer(cols = c(J, k, morisita), names_to = "metric", values_to = "value")
 
+# Plot
+ggplot(agg_long, aes(x = depth_group_numeric, y = value)) +
+  geom_point(alpha = 0.4) +
+  geom_smooth(method = "loess", se = FALSE, color = "red") +
+  facet_wrap(~ metric + taxon, scales = "free") +  # Free x and y axes
+  theme_minimal() +
+  labs(
+    title = "Intraspecific Aggregation Metrics by Depth",
+    x = "Depth group (m)",
+    y = "Aggregation measure"
+  ) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    strip.text = element_text(size = 9)
+  )
 
+# conclusion - the results didnt change drastically compared to the full data set
 
 
 
