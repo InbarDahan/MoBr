@@ -23,6 +23,7 @@ wd_processed_data <- "C:/Users/inbar/OneDrive/desktop/r/chapter_2/MoBr/data/proc
 # read data:
 setwd(wd_processed_data)
 stony <- read.csv("stony_wide_data.csv")
+stony  = stony %>% dplyr::select(-X) 
 
 # _______________________________________________________________
 
@@ -31,7 +32,7 @@ stony <- read.csv("stony_wide_data.csv")
 
 
 # define the first column of species
-first_species <- 4 ####### will turn to 6 after I will reconstruct the coordinates
+first_species <- 6 
 
 # create species metric
 species_metric <- stony[,first_species:length(stony)]
@@ -39,7 +40,7 @@ species_metric <- stony[,first_species:length(stony)]
 # _______________________________________________________________
 
 # depth-ranges
-range(stony$depth, na.rm=TRUE) # 5 - 55 m: 5, 15, 30, 45, 55 m
+range(stony$depth, na.rm=TRUE) # 2 - 55 m: 2, 5, 15, 30, 45, 55 m
 
 # depths histogram:
 stony %>% 
@@ -64,7 +65,7 @@ stony %>%
 stony_sum <- stony %>% 
   mutate(abundance = rowSums(stony[,first_species:length(stony)])) %>%
   mutate(richness = rowSums(stony[, first_species:ncol(stony)] > 0)) %>%
-  dplyr::select( site,depth, plot, richness, abundance)
+  dplyr::select(site ,depth, plot, richness, abundance)
 
 # sum abundance:
 min(stony_sum$abundance) # 74
@@ -72,8 +73,8 @@ max(stony_sum$abundance) # 325
 # 252 folds variation in the alpha scale (sample scale)
 
 # sum richness:
-min(stony_sum$richness) # 30
-max(stony_sum$richness) # 55
+min(stony_sum$richness) # 29
+max(stony_sum$richness) # 54
 
 # _______________________________________________________________
 

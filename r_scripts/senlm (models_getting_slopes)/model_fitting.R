@@ -9,7 +9,7 @@
 library(dplyr)
 library(tidyr)
 library(senlm)
-library(purrr)
+library(purrr) # to skip models crushing
 library(mgcv)
 # _____________________________________________________________
 
@@ -23,7 +23,7 @@ setwd(wd_processed_data)
 combined_data <- read.csv("combined_long.csv")
 combined_data = combined_data %>% dplyr::select(-X)
 
-agg <- read.csv("agg_j_results.csv")
+agg <- read.csv("agg_morisita_results.csv")
 agg <- agg %>% dplyr::select(-X)
 # _____________________________________________________________
 
@@ -73,9 +73,9 @@ subsets_taxons <- purrr::map(taxas,
                                  transformed_data %>%
                                    dplyr::filter(taxon == taxa)
                                })
-# save the models output:
-setwd(wd_models)
-saveRDS(subsets_taxons, file = "subsets_taxons.rds")
+# # save the models output:
+# setwd(wd_models)
+# saveRDS(subsets_taxons, file = "subsets_taxons.rds")
 
 
 subsets_taxons_agg <- purrr::map(taxas,
@@ -84,9 +84,9 @@ subsets_taxons_agg <- purrr::map(taxas,
                                  dplyr::filter(taxon == taxa)
                              })
 
-# save the models output:
-setwd(wd_models)
-saveRDS(subsets_taxons_agg, file = "subsets_taxons_agg.rds")
+# # save the models output:
+# setwd(wd_models)
+# saveRDS(subsets_taxons_agg, file = "subsets_taxons_agg.rds")
 # _____________________________________________________________
 
                   # setting models to fit
@@ -102,14 +102,11 @@ abundance_models <- set_models (mean_class="main", err_class= c("abundance"), me
 
 # abundance:
 
-# 1
-Pars_c <- create_default_par_list (count_models)
-
-# 2 - define and fit the models:
+# 1 - define and fit the models:
 fitted_models_abu <- purrr::map(subsets_taxons, function(data_subset) {
   msenlm(models = count_models, data = data_subset, xvar = "depth", yvar = "abundance", conf.level=0.95)})
 
-# 3 - Create a list of the top abundance models (based on AIC values) for each taxon:
+# 2 - Create a list of the top abundance models (based on AIC values) for each taxon:
 best_models_a <- purrr::map(taxas, ~ {
                taxa_models <- fitted_models_abu[[.x]]$abundance
                aic_values <- purrr::map_dbl(taxa_models, ~.x$IC["AIC"])
@@ -117,28 +114,25 @@ best_models_a <- purrr::map(taxas, ~ {
                ordered_aic_values <- sort(aic_values)
                head(ordered_aic_values)})
 
-# 4 - Extract the best model for each taxon:
+# 3 - Extract the best model for each taxon:
 one_model_a <- purrr::map(taxas, ~ {
   taxa_data <- fitted_models_abu[[.x]]
   summary(msenlm.best(taxa_data, best="AICc"))})
 
 # save the models output:
 setwd(wd_models)
-write.csv(best_models_a, file = "best_models_a.csv")
-write.csv(one_model_a, file = "one_model_a.csv")
+saveRDS(best_models_a, "best_models_a.rds")
+saveRDS(one_model_a, "one_model_a.rds")
 
-# - - - - - - - - - - - - - -
+# - - - - - - - - - - - - - - 
 
 # richness:
 
-# 1
-Pars_c_2 <- create_default_par_list (count_models)
-
-# 2 - define and fit the models:
+# 1 - define and fit the models:
 fitted_models_rich <- purrr::map(subsets_taxons, function(data_subset) {
   msenlm(models = count_models, data = data_subset, xvar = "depth", yvar = "richness", conf.level=0.95)})
 
-# 3 - Create a list of the top richness models (based on AIC values) for each taxon:
+# 2 - Create a list of the top richness models (based on AIC values) for each taxon:
 best_models_r <- purrr::map(taxas, ~ {
                taxa_models <- fitted_models_rich[[.x]]$richness
                aic_values <- purrr::map_dbl(taxa_models, ~.x$IC["AIC"])
@@ -146,32 +140,31 @@ best_models_r <- purrr::map(taxas, ~ {
                ordered_aic_values <- sort(aic_values)
                head(ordered_aic_values)})
 
-# 4 - get the best model
+# 3 - get the best model
 one_model_r <- purrr::map(taxas, ~ {
   taxa_data <- fitted_models_rich[[.x]]
   summary(msenlm.best(taxa_data, best="AICc"))})
 
-
 # save the models output:
 setwd(wd_models)
-write.csv(best_models_r, file = "best_models_r.csv")
-write.csv(one_model_r, file = "one_model_r.csv")
-
+saveRDS(best_models_r, "best_models_r.rds")
+saveRDS(one_model_r, "one_model_r.rds")
 # - - - - - - - - - - - - - -
 
 # evenness:
 
-subsets_taxons_clean <- purrr::map(subsets_taxons, function(data_subset) {
+subsets_taxons_even <- purrr::map(subsets_taxons, function(data_subset) {
   data_subset %>% filter(sigma >= 0 & !is.na(sigma))}) 
 
-# 1
-Pars_a <- create_default_par_list (abundance_models)
+# save the models output:
+setwd(wd_models)
+saveRDS(subsets_taxons_even, file = "subsets_taxons_even.rds")
 
-# 2 - define and fit the models:
-fitted_models_even <- purrr::map(subsets_taxons_clean, function(data_subset) {
+# 1 - define and fit the models:
+fitted_models_even <- purrr::map(subsets_taxons_even, function(data_subset) {
   msenlm_safe(models = abundance_models, data = data_subset, xvar = "depth", yvar = "sigma", conf.level=0.95)})
 
-# 3 - Create a list of the top evenness models (based on AIC values) for each taxon:
+# 2 - Create a list of the top evenness models (based on AIC values) for each taxon:
 best_models_e <- purrr::map(taxas, ~ {
   taxa_models <- fitted_models_even[[.x]]$sigma                                              # Pull all sigma models for current taxon
   valid_models <- purrr::keep(taxa_models, ~ !is.null(.x$IC["AIC"]) && !is.na(.x$IC["AIC"])) # Keep only valid models with AIC
@@ -180,7 +173,7 @@ best_models_e <- purrr::map(taxas, ~ {
   valid_models[ordered_model_names[1:min(5, length(ordered_model_names))]]# Get the top 5 full model objects
 })
 
-# 4 - get the best model
+# 3 - get the best model
 one_model_e <- purrr::map(taxas, ~ {
   taxa_models <- fitted_models_even[[.x]]$sigma
   valid_models <- purrr::keep(taxa_models, ~ !is.null(.x$IC["AIC"]) && !is.na(.x$IC["AIC"]))
@@ -199,41 +192,34 @@ saveRDS(one_model_e, "one_model_e.rds")
 # aggregations:
 
 ### *** ### 
-# Problem - the senlm package do not deal with negative data and the j index has negative values. 
-# if I will is k or morisita than the regular code will work but for the j, an alternative
-# modelling approach is needed
+# Solved problem - the senlm package do not deal with negative data and the j index has negative values. 
+# Hence I choose the morisita index, where the lowest value is 0. 
 ### *** ### 
 
+# 1 - define and fit the models:
 fitted_models_agg <- purrr::map(subsets_taxons_agg, function(data_subset) {
-  tryCatch(gam(value ~ s(depth_group), data = data_subset, family = gaussian()),
-           error = function(e) NULL )})
+  msenlm_safe(models = abundance_models, data = data_subset, xvar = "depth_group", yvar = "value", conf.level=0.95)})
+
+# 2 - Create a list of the top agg models (based on AIC values) for each taxon:
+best_models_agg <- purrr::map(taxas, ~ {
+  taxa_models <- fitted_models_agg[[.x]]$value                                              # Pull all value models for current taxon
+  valid_models <- purrr::keep(taxa_models, ~ !is.null(.x$IC["AIC"]) && !is.na(.x$IC["AIC"])) # Keep only valid models with AIC
+  aic_values <- purrr::map_dbl(valid_models, ~ .x$IC["AIC"]) # Extract and sort AIC values
+  ordered_model_names <- names(sort(aic_values))
+  valid_models[ordered_model_names[1:min(5, length(ordered_model_names))]]# Get the top 5 full model objects
+})
+
+# 3 - get the best model
+one_model_agg <- purrr::map(taxas, ~ {
+  taxa_models <- fitted_models_agg[[.x]]$value
+  valid_models <- purrr::keep(taxa_models, ~ !is.null(.x$IC["AIC"]) && !is.na(.x$IC["AIC"]))
+  aic_values <- purrr::map_dbl(valid_models, ~ .x$IC["AIC"])
+  ordered_model_names <- names(sort(aic_values))
+  valid_models[[ordered_model_names[1]]] # Return just the best model (lowest AIC)
+})
 # 
-# abundance_models_agg <- set_models(mean_fun = c("gaussian"), err_dist = c("gaussian"))
-# 
-# # 2 - define and fit the models:
-# fitted_models_agg <- purrr::map(subsets_taxons_agg, function(data_subset) {
-#   msenlm_safe(models = abundance_models, data = data_subset, xvar = "depth", yvar = "value", conf.level=0.95)})
-# 
-# # 3 - Create a list of the top agg models (based on AIC values) for each taxon:
-# best_models_agg <- purrr::map(taxas, ~ {
-#   taxa_models <- fitted_models_agg[[.x]]$value                                              # Pull all value models for current taxon
-#   valid_models <- purrr::keep(taxa_models, ~ !is.null(.x$IC["AIC"]) && !is.na(.x$IC["AIC"])) # Keep only valid models with AIC
-#   aic_values <- purrr::map_dbl(valid_models, ~ .x$IC["AIC"]) # Extract and sort AIC values
-#   ordered_model_names <- names(sort(aic_values))
-#   valid_models[ordered_model_names[1:min(5, length(ordered_model_names))]]# Get the top 5 full model objects
-# })
-# 
-# # 4 - get the best model
-# one_model_agg <- purrr::map(taxas, ~ {
-#   taxa_models <- fitted_models_agg[[.x]]$value
-#   valid_models <- purrr::keep(taxa_models, ~ !is.null(.x$IC["AIC"]) && !is.na(.x$IC["AIC"]))
-#   aic_values <- purrr::map_dbl(valid_models, ~ .x$IC["AIC"])
-#   ordered_model_names <- names(sort(aic_values))
-#   valid_models[[ordered_model_names[1]]] # Return just the best model (lowest AIC)
-# })
-# 
-# # save the models output:
-# setwd(wd_models)
-# saveRDS(best_models_agg, "best_models_agg.rds")
-# saveRDS(one_model_agg, "one_model_agg.rds")
+# save the models output:
+setwd(wd_models)
+saveRDS(best_models_agg, "best_models_agg.rds")
+saveRDS(one_model_agg, "one_model_agg.rds")
 

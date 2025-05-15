@@ -1,6 +1,6 @@
 
 
-                    # united plots for all taxonomic groups
+           # united plots for all taxonomic groups
 
 # libraries:
 library(dplyr)
@@ -198,3 +198,4 @@ ggplot(taxon_long, aes(x = depth, y = value, color = taxon)) +
     subtitle = "Comparing Taxonomic Groups by Measure"
   ) +
   scale_color_manual(values = c("purple","darkred", "steelblue", "darkgreen"))  # Softer, professional colors
+

@@ -15,8 +15,6 @@ wd_processed_data <- "C:/Users/inbar/OneDrive/desktop/r/chapter_2/MoBr/data/proc
 setwd(wd_processed_data)
 combined_data <- read.csv("combined_long.csv")
 combined_data <- combined_data %>% dplyr::select(-X) 
-
-
 # _____________________________________________________________
 
 ggplot(combined_data, aes(x = taxon, y = value, fill = diversity_measure)) +
