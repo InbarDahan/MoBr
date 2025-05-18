@@ -13,11 +13,16 @@ library(purrr)
 wd_models <- "C:/Users/inbar/OneDrive/desktop/r/chapter_2/MoBr/data/processed/models" 
 
 setwd(wd_models)
-# models:
+# best model:
 one_model_a <- readRDS("one_model_a.rds")
 one_model_r <- readRDS("one_model_r.rds")
 one_model_e <- readRDS("one_model_e.rds")
 one_model_agg <- readRDS("one_model_agg.rds")
+
+# 5 best models:
+models_list_r <- readRDS("best_models_r.rds")
+models_list_a <- readRDS("best_models_a.rds")
+models_list_e <- readRDS("best_models_e.rds")
 
 # data - clean if needed
 subsets_taxons <- readRDS("subsets_taxons.rds")
@@ -28,18 +33,21 @@ subsets_taxons_agg <- readRDS("subsets_taxons_agg.rds")
       # Running the models for all of the diversity measures:
 
 # richness models:
+models_list_r[[2]] # - when the first models doesn't look the best (over fitting)
 
 # mixgaussian_negbin     
 model_r_fish <- senlm(data = subsets_taxons[[1]], xvar = "depth", yvar = "richness",  mean_fun = one_model_r[[1]]$mean_fun, err_dist = one_model_r[[1]]$err_dist)
-# mixgaussian_zip
+# sech_zinb
 model_r_sponges <- senlm(data = subsets_taxons[[2]], xvar = "depth", yvar = "richness",  mean_fun = one_model_r[[2]]$mean_fun, err_dist = one_model_r[[2]]$err_dist)
 # hofV_poisson
-model_r_stony <- senlm(data = subsets_taxons[[3]], xvar = "depth", yvar = "richness",  mean_fun = one_model_r[[3]]$mean_fun, err_dist = one_model_r[[3]]$err_dist)
-# gaussian_poisson
+model_r_stony <- senlm(data = subsets_taxons[[3]], xvar = "depth", yvar = "richness",   mean_fun = one_model_r[[3]]$mean_fun, err_dist = one_model_r[[3]]$err_dist)
+#
 model_r_soft <- senlm(data = subsets_taxons[[4]], xvar = "depth", yvar = "richness",  mean_fun = one_model_r[[4]]$mean_fun, err_dist = one_model_r[[4]]$err_dist)
 # - - - - -
 
 # abundance models:
+
+models_list_a[[4]]
 
 # mixgaussian_zinbl
 model_a_fish <- senlm(data = subsets_taxons[[1]], xvar = "depth", yvar = "abundance",  mean_fun = one_model_a[[1]]$mean_fun, err_dist = one_model_a[[1]]$err_dist)
@@ -53,6 +61,8 @@ model_a_soft <- senlm(data = subsets_taxons[[4]], xvar = "depth", yvar = "abunda
 # - - - - -
 
 # evenness models:
+
+models_list_e[[2]]
 
 # gaussian_zig
 model_e_fish <- senlm(data = subsets_taxons_even[[1]], xvar = "depth", yvar = "sigma",  mean_fun = one_model_e[[1]]$model_info$mean_fun, err_dist = one_model_e[[1]]$model_info$err_dist)
@@ -80,17 +90,19 @@ model_agg_soft <- senlm(data = subsets_taxons_agg[[4]], xvar = "depth_group", yv
 
               # Plotting the united plot 
 
+# Reset layout to default
+par(mfrow = c(1, 1))
+
+
 # Set up a multi-panel layout: 4 rows and 2 columns
 par(mfrow = c(4, 4), mar = c(1, 1, 2, 1.5))  # Adjust margins as needed
 mygrey <- grey(level = 0.65, alpha = 0.4)  
 
 # - - - - -
 
-# richness
-
 # Fish
 predict.x <- seq(from=min(subsets_taxons[[1]]$depth), to = max(subsets_taxons[[1]]$depth), length.out = nrow(subsets_taxons[[1]])) 
-fitted_values <- predict(model_r_fish, predict.x)
+fitted_values <- predict(model_r_fish, predict.x)   # for this function we need an 'senlm' object and not data frame and that's why we run the models in this script
 plot(subsets_taxons[[1]]$depth, subsets_taxons[[1]]$richness, pch = 21, col = mygrey, bg = mygrey,
      main = "Fishes", ylab="Richness", xlab = "", cex.lab = 1.1, # Size of axis labels
      font.lab = 2) # Font: 1=plain, 2=bold, 3=italic, 4=bold italic
@@ -194,7 +206,7 @@ lines(predict.x, fitted_values, col = "#CAFF70", lwd = 2)
 
 # Sponges
 predict.x <- seq(from=min(subsets_taxons_agg[[2]]$depth_group), to = max(subsets_taxons_agg[[2]]$depth_group), length.out = nrow(subsets_taxons_agg[[2]])) 
-fitted_values <- predict(model_agg_sponges, predict.x)
+fitted_values <- predict(one_model_agg[[2]], predict.x)
 plot(subsets_taxons_agg[[2]]$depth_group, subsets_taxons_agg[[2]]$value, pch = 21, col = mygrey, bg = mygrey,
      main = "", ylab="", xlab = "")
 lines(predict.x, fitted_values, col = "#CAFF70", lwd = 2)  

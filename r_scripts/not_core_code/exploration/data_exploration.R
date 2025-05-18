@@ -13,7 +13,7 @@ wd_processed_data <- "C:/Users/inbar/OneDrive/desktop/r/chapter_2/MoBr/data/proc
 
 # read: 
 setwd(wd_processed_data)
-combined_data <- read.csv("combined_long.csv")
+combined_data <- read.csv("combined_long.csv") # comes from the script "combine_rich_abu_even_calc"
 combined_data <- combined_data %>% dplyr::select(-X) 
 # _____________________________________________________________
 

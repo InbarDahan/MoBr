@@ -18,6 +18,13 @@ one_model_r <- readRDS("one_model_r.rds")
 one_model_e <- readRDS("one_model_e.rds")
 one_model_agg <- readRDS("one_model_agg.rds")
 
+
+# 5 best models:
+models_list_r <- readRDS("best_models_r.rds")
+models_list_a <- readRDS("best_models_a.rds")
+models_list_e <- readRDS("best_models_e.rds")
+
+
 subsets_taxons <- readRDS("subsets_taxons.rds")
 subsets_taxons_clean <- readRDS("subsets_taxons_clean.rds")
 # _____________________________________________________________
@@ -44,6 +51,9 @@ points(subsets_taxons[[1]]$depth, subsets_taxons[[1]]$abundance,
 # abundance:
 
                                 # mean function:
+
+# richness models:
+models_list_r[[2]] # - when the first models doesn't look the best (over fitting)
 
 # 6 - fit the best model for visualization:
 # mixgaussian_negbin
@@ -686,5 +696,24 @@ ggplot() +
     axis.title.y = element_text(face = "bold", size = 11),
     panel.spacing = unit(1, "lines")
   )
+
+
+# Combine predicted values from the models
+predicted_df <- imap_dfr(one_model_r, function(model_summary, taxon_name) {
+  if (!is.null(model_summary$pred)) {
+    tibble(
+      depth = model_summary$pred$x,
+      richness_fit = model_summary$pred$fit,
+      lower = model_summary$pred$lwr,
+      upper = model_summary$pred$upr,
+      taxon = taxon_name
+    )
+  }
+}, .id = "taxon")  # taxon ID is already added inside, but this ensures robustness
+
+# Plot: Richness vs Depth with confidence intervals
+ggplot(predicted_df, aes(x = depth, y = richness_fit)) +
+  geom_line(color = "blue") +
+  geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.2) +
 
      # 
