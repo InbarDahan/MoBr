@@ -48,12 +48,12 @@ sponges_sum <- sponges %>%
   dplyr::select(quad, depth_group, depth, Site, lon, lat, richness, abundance)
 
 ## stony corals:
-first_species_st <- 6
+first_species_st <- 7
 
 stony_sum <- stony %>% 
   mutate(abundance = rowSums(stony[,first_species_st:length(stony)])) %>%
   mutate(richness = rowSums(stony[, first_species_st:ncol(stony)] > 0)) %>%
-  dplyr::select( site,depth, plot, lon, lat, richness, abundance)
+  dplyr::select(sample_id, site, depth,lon, lat, richness, abundance)
 
 ## soft corals:
 first_species_sf <- 6
@@ -61,7 +61,7 @@ first_species_sf <- 6
 soft_sum <- soft %>% 
   mutate(abundance = rowSums(soft[,first_species_sf:length(soft)])) %>%
   mutate(richness = rowSums(soft[, first_species_sf:ncol(soft)] > 0)) %>%
-  dplyr::select(site,depth, sample, lon, lat, richness, abundance)
+  dplyr::select(site, depth, sample, lon, lat, richness, abundance)
 # _______________________________________________________________
 # _______________________________________________________________
 
@@ -201,7 +201,7 @@ soft_sum$sigma <- sigma_values_sf
 # renaming columns:
 fish_sum <- fish_sum %>% rename(sample = OpCode)
 sponges_sum <- sponges_sum %>% rename(sample = quad)
-stony_sum <- stony_sum %>% rename(sample = plot)
+stony_sum <- stony_sum %>% rename(sample = sample_id)
 
 fish_sum <- fish_sum %>% rename(lon = lon_x)
 fish_sum <- fish_sum %>% rename(lat = lat_y)
@@ -226,7 +226,6 @@ combined_data$lon[combined_data$lon == 0] <- NA
 combined_data$lat[combined_data$lat == 0] <- NA
 # _______________________________________________________________
 
-
 ## save:
 setwd(wd_processed_data)
 write.csv(combined_data, file = "combined_data.csv")
@@ -234,7 +233,6 @@ write.csv(combined_data, file = "combined_data.csv")
 # ________________________________________________________________
 
 # ________________________________________________________________
-
 
 # creating another df format to allow faceted graphs:
 
@@ -296,6 +294,9 @@ polygon_sf <- st_sfc(polygon, crs = "+proj=longlat +datum=WGS84 +ellps=WGS84 +to
 # map the polygon and my points to check I included everything:
 mapview(polygon_sf) + mapView(taxon_data_sf, zcol = "taxon", legend = TRUE, layer.name = 'Taxon')
 
+mapview(polygon_sf) + mapView(taxon_data_sf, zcol = "taxon", legend = TRUE, layer.name = 'Taxon')
+
+
 # Filter out the points that are outside the polygon
 df_filtered_sf <- taxon_data_sf[st_intersects(taxon_data_sf, polygon_sf, sparse = FALSE), ]
 
@@ -311,11 +312,12 @@ df_final <- bind_rows(as.data.frame(df_filtered), df_without_coords)
 
 setwd(wd_processed_data)
 write.csv(df_final, file = "NR_SOUTH_data.csv")
+
+# soft_data_sf <- st_as_sf(soft_corals, coords = c('lon', 'lat'), crs = crs("+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0"))
+# mapview(soft_data_sf)
 # ________________________________________________________________
 
 # ________________________________________________________________
-
-
 
            # filter data - by features 
 

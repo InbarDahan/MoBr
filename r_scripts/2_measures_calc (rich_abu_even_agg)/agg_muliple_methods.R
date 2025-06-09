@@ -109,13 +109,31 @@ calc_k <- function(ab_vec) {
 
 # - - - 
 
-# Morisita index (standardized)
+# Morisita index ( not standardized)
+
 calc_morisita <- function(ab_vec) {
   if (length(ab_vec) < 2 || sum(ab_vec) < 5 || all(ab_vec == 0)) return(NA)
   mat <- matrix(ab_vec, ncol = 1)
   mori <- vegan::dispindmorisita(mat)[1, 1]
   return(mori)
 }
+
+# # Morisita index (standardized)                       ### this index is more recommended because it is less sensitive to sample size, but since no great differences were present we used the regular morisita because it cant be negative numbers and it is good for the senlm package
+# calc_morisita_standardised <- function(ab_vec) {
+#   if (length(ab_vec) < 2 || sum(ab_vec) < 5 || all(ab_vec == 0)) return(NA)
+#   
+#   mat <- matrix(ab_vec, ncol = 1)
+#   n <- nrow(mat)
+#   
+#   im <- vegan::dispindmorisita(mat)[1, 1]
+#   
+#   # Avoid division by zero when n = 1
+#   if (n <= 1) return(NA)
+#   
+#   # Standardised Morisita index
+#   ip <- (im - 1) / (n - 1)
+#   return(ip)
+# }
 
 # _______________________________________________________________
 
@@ -149,6 +167,8 @@ agg_results <- map_dfr(names(taxon_list), function(taxon_name) {
 
 
         # Step 3: Plotting the Results Side by Side
+
+par(mfrow = c(1, 1))
 
 # Convert depth_group to numeric if possible (for better spacing on x-axis)
  agg_results <- agg_results %>%

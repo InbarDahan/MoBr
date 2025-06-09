@@ -388,6 +388,168 @@ lines(predict.x, fitted_values, col = "#CAFF70", lwd = 2)
 # Reset layout to default
 par(mfrow = c(1, 1))
 
+# ______________________________________________________
+
+# ______________________________________________________
+
+
+# _____________________________________________________________
+
+
+# after changes from Yoni:
+
+# setting parameters for plot layout
+par(mfrow = c(4, 4),
+    oma = c(5, 5, 3, 1),   # external gaps
+    mar = c(2, 2, 2, 1),   # internal gaps
+    cex.lab = 1.5,         # title and axis size
+    cex.axis = 1.3,        # size of axis numbers
+    bty = "n")             # removing the outline
+
+# - - - - - Richness - - - - -
+par(mfrow = c(4, 4))
+# Fishes
+x_max <- ceiling(max(subsets_taxons[[1]]$depth) / 10) * 10  # Round up to nearest 10
+x_ticks <- seq(0, x_max, by = 10)
+predict.x <- seq(min(subsets_taxons[[1]]$depth), max(subsets_taxons[[1]]$depth), length.out = nrow(subsets_taxons[[1]]))
+fitted_values <- predict(model_r_fish, predict.x)
+plot(subsets_taxons[[1]]$depth, subsets_taxons[[1]]$richness, pch = 21, col = mygrey, bg = mygrey,
+     main = "Fishes", ylab="Richness", xlab = "", font.lab = 2,      
+     xlim = c(0, x_max),  # X-axis from 0
+     ylim = c(0, max(subsets_taxons[[1]]$richness, na.rm = TRUE)), 
+     xaxs = "i", yaxs = "i")  # Y-axis from 0
+lines(predict.x, fitted_values, col = "#084081", lwd = 3)
+axis(side = 1, at = seq(0, max(subsets_taxons[[1]]$depth), by = 10))
+
+# Sponges
+x_max <- ceiling(max(subsets_taxons[[1]]$depth) / 10) * 10  # Round up to nearest 10
+x_ticks <- seq(0, x_max, by = 10)
+predict.x <- seq(min(subsets_taxons[[2]]$depth), max(subsets_taxons[[2]]$depth), length.out = nrow(subsets_taxons[[2]]))
+fitted_values <- predict(model_r_sponges, predict.x)
+plot(subsets_taxons[[2]]$depth, subsets_taxons[[2]]$richness, pch = 21, col = mygrey, bg = mygrey,
+     main = "Porifera", ylab="", xlab = "")
+lines(predict.x, fitted_values, col = "#084081", lwd = 3)
+
+# Stony corals
+x_max <- ceiling(max(subsets_taxons[[1]]$depth) / 10) * 10  # Round up to nearest 10
+x_ticks <- seq(0, x_max, by = 10)
+predict.x <- seq(min(subsets_taxons[[3]]$depth), max(subsets_taxons[[3]]$depth), length.out = nrow(subsets_taxons[[3]]))
+fitted_values <- predict(model_r_stony, predict.x)
+plot(subsets_taxons[[3]]$depth, subsets_taxons[[3]]$richness, pch = 21, col = mygrey, bg = mygrey,
+     main = "Scleractinia", ylab="", xlab = "")
+lines(predict.x, fitted_values, col = "#084081", lwd = 3)
+
+# Soft corals
+x_max <- ceiling(max(subsets_taxons[[1]]$depth) / 10) * 10  # Round up to nearest 10
+x_ticks <- seq(0, x_max, by = 10)
+predict.x <- seq(min(subsets_taxons[[4]]$depth), max(subsets_taxons[[4]]$depth), length.out = nrow(subsets_taxons[[4]]))
+fitted_values <- predict(model_r_soft, predict.x)
+plot(subsets_taxons[[4]]$depth, subsets_taxons[[4]]$richness, pch = 21, col = mygrey, bg = mygrey,
+     main = "Octocorallia", ylab="", xlab = "")
+lines(predict.x, fitted_values, col = "#084081", lwd = 3)
+
+# - - - - - Abundance - - - - -
+
+x_max <- ceiling(max(subsets_taxons[[1]]$depth) / 10) * 10  # Round up to nearest 10
+x_ticks <- seq(0, x_max, by = 10)
+predict.x <- seq(min(subsets_taxons[[1]]$depth), max(subsets_taxons[[1]]$depth), length.out = nrow(subsets_taxons[[1]]))
+fitted_values <- predict(model_a_fish, predict.x)
+plot(subsets_taxons[[1]]$depth, subsets_taxons[[1]]$abundance, pch = 21,col = mygrey, bg = mygrey,
+     ylab="Abundance", xlab = "", font.lab = 2)
+lines(predict.x, fitted_values, col = "#2B8CBE", lwd = 3)
+
+x_max <- ceiling(max(subsets_taxons[[1]]$depth) / 10) * 10  # Round up to nearest 10
+x_ticks <- seq(0, x_max, by = 10)
+predict.x <- seq(min(subsets_taxons[[2]]$depth), max(subsets_taxons[[2]]$depth), length.out = nrow(subsets_taxons[[2]]))
+fitted_values <- predict(model_a_sponges, predict.x)
+plot(subsets_taxons[[2]]$depth, subsets_taxons[[2]]$abundance, pch = 21, col = mygrey, bg = mygrey, ylab="", xlab = "")
+lines(predict.x, fitted_values, col = "#2B8CBE", lwd = 3)
+
+x_max <- ceiling(max(subsets_taxons[[1]]$depth) / 10) * 10  # Round up to nearest 10
+x_ticks <- seq(0, x_max, by = 10)
+predict.x <- seq(min(subsets_taxons[[3]]$depth), max(subsets_taxons[[3]]$depth), length.out = nrow(subsets_taxons[[3]]))
+fitted_values <- predict(model_a_stony, predict.x)
+plot(subsets_taxons[[3]]$depth, subsets_taxons[[3]]$abundance, pch = 21,col = mygrey, bg = mygrey, ylab="", xlab = "")
+lines(predict.x, fitted_values, col = "#2B8CBE", lwd = 3)
+
+x_max <- ceiling(max(subsets_taxons[[1]]$depth) / 10) * 10  # Round up to nearest 10
+x_ticks <- seq(0, x_max, by = 10)
+predict.x <- seq(min(subsets_taxons[[4]]$depth), max(subsets_taxons[[4]]$depth), length.out = nrow(subsets_taxons[[4]]))
+fitted_values <- predict(model_a_soft, predict.x)
+plot(subsets_taxons[[4]]$depth, subsets_taxons[[4]]$abundance, pch = 21, col = mygrey, bg = mygrey, ylab="", xlab = "")
+lines(predict.x, fitted_values, col = "#2B8CBE", lwd = 3)
+
+# - - - - - Evenness - - - - -
+
+x_max <- ceiling(max(subsets_taxons[[1]]$depth) / 10) * 10  # Round up to nearest 10
+x_ticks <- seq(0, x_max, by = 10)
+predict.x <- seq(min(subsets_taxons_even[[1]]$depth), max(subsets_taxons_even[[1]]$depth), length.out = nrow(subsets_taxons_even[[1]]))
+fitted_values <- predict(model_e_fish, predict.x)
+plot(subsets_taxons_even[[1]]$depth, subsets_taxons_even[[1]]$sigma, pch = 21, col = mygrey, bg = mygrey,
+     ylab="Evenness", xlab = "", font.lab = 2)
+lines(predict.x, fitted_values, col = "#7BCCC4", lwd = 3)
+
+x_max <- ceiling(max(subsets_taxons[[1]]$depth) / 10) * 10  # Round up to nearest 10
+x_ticks <- seq(0, x_max, by = 10)
+predict.x <- seq(min(subsets_taxons_even[[2]]$depth), max(subsets_taxons_even[[2]]$depth), length.out = nrow(subsets_taxons_even[[2]]))
+fitted_values <- predict(model_e_sponges, predict.x)
+plot(subsets_taxons_even[[2]]$depth, subsets_taxons_even[[2]]$sigma, pch = 21, col = mygrey, bg = mygrey, ylab="", xlab = "")
+lines(predict.x, fitted_values, col = "#7BCCC4", lwd = 3)
+
+x_max <- ceiling(max(subsets_taxons[[1]]$depth) / 10) * 10  # Round up to nearest 10
+x_ticks <- seq(0, x_max, by = 10)
+predict.x <- seq(min(subsets_taxons_even[[3]]$depth), max(subsets_taxons_even[[3]]$depth), length.out = nrow(subsets_taxons_even[[3]]))
+fitted_values <- predict(model_e_stony, predict.x)
+plot(subsets_taxons_even[[3]]$depth, subsets_taxons_even[[3]]$sigma, pch = 21, col = mygrey, bg = mygrey, ylab="", xlab = "")
+lines(predict.x, fitted_values, col = "#7BCCC4", lwd = 3)
+
+x_max <- ceiling(max(subsets_taxons[[1]]$depth) / 10) * 10  # Round up to nearest 10
+x_ticks <- seq(0, x_max, by = 10)
+predict.x <- seq(min(subsets_taxons_even[[4]]$depth), max(subsets_taxons_even[[4]]$depth), length.out = nrow(subsets_taxons_even[[4]]))
+fitted_values <- predict(model_e_soft, predict.x)
+plot(subsets_taxons_even[[4]]$depth, subsets_taxons_even[[4]]$sigma, pch = 21, col = mygrey, bg = mygrey, ylab="", xlab = "")
+lines(predict.x, fitted_values, col = "#7BCCC4", lwd = 3)
+
+# - - - - - Aggregations - - - - -
+
+x_max <- ceiling(max(subsets_taxons[[1]]$depth) / 10) * 10  # Round up to nearest 10
+x_ticks <- seq(0, x_max, by = 10)
+predict.x <- seq(min(subsets_taxons_agg[[1]]$depth_group), max(subsets_taxons_agg[[1]]$depth_group), length.out = nrow(subsets_taxons_agg[[1]]))
+fitted_values <- predict(model_agg_fish, predict.x)
+plot(subsets_taxons_agg[[1]]$depth_group, subsets_taxons_agg[[1]]$value, pch = 21, col = mygrey, bg = mygrey,
+     ylab="Aggregations", xlab = "", font.lab = 2)
+lines(predict.x, fitted_values, col = "#BAE4BC", lwd = 3)
+
+x_max <- ceiling(max(subsets_taxons[[1]]$depth) / 10) * 10  # Round up to nearest 10
+x_ticks <- seq(0, x_max, by = 10)
+predict.x <- seq(min(subsets_taxons_agg[[2]]$depth_group), max(subsets_taxons_agg[[2]]$depth_group), length.out = nrow(subsets_taxons_agg[[2]]))
+fitted_values <- predict(model_agg_sponges, predict.x)
+plot(subsets_taxons_agg[[2]]$depth_group, subsets_taxons_agg[[2]]$value, pch = 21, col = mygrey, bg = mygrey, ylab="", xlab = "")
+lines(predict.x, fitted_values, col = "#BAE4BC", lwd = 3)
+
+x_max <- ceiling(max(subsets_taxons[[1]]$depth) / 10) * 10  # Round up to nearest 10
+x_ticks <- seq(0, x_max, by = 10)
+predict.x <- seq(min(subsets_taxons_agg[[3]]$depth_group), max(subsets_taxons_agg[[3]]$depth_group), length.out = nrow(subsets_taxons_agg[[3]]))
+fitted_values <- predict(model_agg_stony, predict.x)
+plot(subsets_taxons_agg[[3]]$depth_group, subsets_taxons_agg[[3]]$value, pch = 21, col = mygrey, bg = mygrey, ylab="", xlab = "")
+lines(predict.x, fitted_values, col = "#BAE4BC", lwd = 3)
+
+x_max <- ceiling(max(subsets_taxons[[1]]$depth) / 10) * 10  # Round up to nearest 10
+x_ticks <- seq(0, x_max, by = 10)
+predict.x <- seq(min(subsets_taxons_agg[[4]]$depth_group), max(subsets_taxons_agg[[4]]$depth_group), length.out = nrow(subsets_taxons_agg[[4]]))
+fitted_values <- predict(model_agg_soft, predict.x)
+plot(subsets_taxons_agg[[4]]$depth_group, subsets_taxons_agg[[4]]$value, pch = 21, col = mygrey, bg = mygrey, ylab="", xlab = "")
+lines(predict.x, fitted_values, col = "#BAE4BC", lwd = 3)
+
+# Add shared x-axis label
+mtext("Depth (m)", side = 1, outer = TRUE, line = 3, cex = 1.5, font = 2)
+
+# Add overall title
+mtext("Marine Biodiversity Metrics Across Depth Gradients", side = 3, outer = TRUE, line = 1, cex = 1.8, font = 2)
+
+# Reset layout to default
+par(mfrow = c(1, 1))
+
 
 
 
@@ -715,5 +877,115 @@ predicted_df <- imap_dfr(one_model_r, function(model_summary, taxon_name) {
 ggplot(predicted_df, aes(x = depth, y = richness_fit)) +
   geom_line(color = "blue") +
   geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.2) +
+  
+  
+  # - - - - - Richness - - - - -
+  
+  # Fishes
+  predict.x <- seq(min(subsets_taxons[[1]]$depth), max(subsets_taxons[[1]]$depth), length.out = nrow(subsets_taxons[[1]]))
+fitted_values <- predict(model_r_fish, predict.x)
+plot(subsets_taxons[[1]]$depth, subsets_taxons[[1]]$richness, pch = 21, col = "black", bg = "black",
+     main = "Fishes", ylab="Richness", xlab = "", font.lab = 2)
+lines(predict.x, fitted_values, col = "#084081", lwd = 3)
+
+# Sponges
+predict.x <- seq(min(subsets_taxons[[2]]$depth), max(subsets_taxons[[2]]$depth), length.out = nrow(subsets_taxons[[2]]))
+fitted_values <- predict(model_r_sponges, predict.x)
+plot(subsets_taxons[[2]]$depth, subsets_taxons[[2]]$richness, pch = 21, col = "black", bg = "black",
+     main = "Sponges", ylab="", xlab = "")
+lines(predict.x, fitted_values, col = "#084081", lwd = 3)
+
+# Stony corals
+predict.x <- seq(min(subsets_taxons[[3]]$depth), max(subsets_taxons[[3]]$depth), length.out = nrow(subsets_taxons[[3]]))
+fitted_values <- predict(model_r_stony, predict.x)
+plot(subsets_taxons[[3]]$depth, subsets_taxons[[3]]$richness, pch = 21, col = "black", bg = "black",
+     main = "Stony Corals", ylab="", xlab = "")
+lines(predict.x, fitted_values, col = "#084081", lwd = 3)
+
+# Soft corals
+predict.x <- seq(min(subsets_taxons[[4]]$depth), max(subsets_taxons[[4]]$depth), length.out = nrow(subsets_taxons[[4]]))
+fitted_values <- predict(model_r_soft, predict.x)
+plot(subsets_taxons[[4]]$depth, subsets_taxons[[4]]$richness, pch = 21, col = "black", bg = "black",
+     main = "Soft Corals", ylab="", xlab = "")
+lines(predict.x, fitted_values, col = "#084081", lwd = 3)
+
+# - - - - - Abundance - - - - -
+
+predict.x <- seq(min(subsets_taxons[[1]]$depth), max(subsets_taxons[[1]]$depth), length.out = nrow(subsets_taxons[[1]]))
+fitted_values <- predict(model_a_fish, predict.x)
+plot(subsets_taxons[[1]]$depth, subsets_taxons[[1]]$abundance, pch = 21, col = "black", bg = "black",
+     ylab="Abundance", xlab = "", font.lab = 2)
+lines(predict.x, fitted_values, col = "#2B8CBE", lwd = 3)
+
+predict.x <- seq(min(subsets_taxons[[2]]$depth), max(subsets_taxons[[2]]$depth), length.out = nrow(subsets_taxons[[2]]))
+fitted_values <- predict(model_a_sponges, predict.x)
+plot(subsets_taxons[[2]]$depth, subsets_taxons[[2]]$abundance, pch = 21, col = "black", bg = "black", ylab="", xlab = "")
+lines(predict.x, fitted_values, col = "#2B8CBE", lwd = 3)
+
+predict.x <- seq(min(subsets_taxons[[3]]$depth), max(subsets_taxons[[3]]$depth), length.out = nrow(subsets_taxons[[3]]))
+fitted_values <- predict(model_a_stony, predict.x)
+plot(subsets_taxons[[3]]$depth, subsets_taxons[[3]]$abundance, pch = 21, col = "black", bg = "black", ylab="", xlab = "")
+lines(predict.x, fitted_values, col = "#2B8CBE", lwd = 3)
+
+predict.x <- seq(min(subsets_taxons[[4]]$depth), max(subsets_taxons[[4]]$depth), length.out = nrow(subsets_taxons[[4]]))
+fitted_values <- predict(model_a_soft, predict.x)
+plot(subsets_taxons[[4]]$depth, subsets_taxons[[4]]$abundance, pch = 21, col = "black", bg = "black", ylab="", xlab = "")
+lines(predict.x, fitted_values, col = "#2B8CBE", lwd = 3)
+
+# - - - - - Evenness - - - - -
+
+predict.x <- seq(min(subsets_taxons_even[[1]]$depth), max(subsets_taxons_even[[1]]$depth), length.out = nrow(subsets_taxons_even[[1]]))
+fitted_values <- predict(model_e_fish, predict.x)
+plot(subsets_taxons_even[[1]]$depth, subsets_taxons_even[[1]]$sigma, pch = 21, col = "black", bg = "black",
+     ylab="Evenness", xlab = "", font.lab = 2)
+lines(predict.x, fitted_values, col = "#7BCCC4", lwd = 3)
+
+predict.x <- seq(min(subsets_taxons_even[[2]]$depth), max(subsets_taxons_even[[2]]$depth), length.out = nrow(subsets_taxons_even[[2]]))
+fitted_values <- predict(model_e_sponges, predict.x)
+plot(subsets_taxons_even[[2]]$depth, subsets_taxons_even[[2]]$sigma, pch = 21, col = "black", bg = "black", ylab="", xlab = "")
+lines(predict.x, fitted_values, col = "#7BCCC4", lwd = 3)
+
+predict.x <- seq(min(subsets_taxons_even[[3]]$depth), max(subsets_taxons_even[[3]]$depth), length.out = nrow(subsets_taxons_even[[3]]))
+fitted_values <- predict(model_e_stony, predict.x)
+plot(subsets_taxons_even[[3]]$depth, subsets_taxons_even[[3]]$sigma, pch = 21, col = "black", bg = "black", ylab="", xlab = "")
+lines(predict.x, fitted_values, col = "#7BCCC4", lwd = 3)
+
+predict.x <- seq(min(subsets_taxons_even[[4]]$depth), max(subsets_taxons_even[[4]]$depth), length.out = nrow(subsets_taxons_even[[4]]))
+fitted_values <- predict(model_e_soft, predict.x)
+plot(subsets_taxons_even[[4]]$depth, subsets_taxons_even[[4]]$sigma, pch = 21, col = "black", bg = "black", ylab="", xlab = "")
+lines(predict.x, fitted_values, col = "#7BCCC4", lwd = 3)
+
+# - - - - - Aggregations - - - - -
+
+predict.x <- seq(min(subsets_taxons_agg[[1]]$depth_group), max(subsets_taxons_agg[[1]]$depth_group), length.out = nrow(subsets_taxons_agg[[1]]))
+fitted_values <- predict(model_agg_fish, predict.x)
+plot(subsets_taxons_agg[[1]]$depth_group, subsets_taxons_agg[[1]]$value, pch = 21, col = "black", bg = "black",
+     ylab="Aggregations", xlab = "", font.lab = 2)
+lines(predict.x, fitted_values, col = "#BAE4BC", lwd = 3)
+
+predict.x <- seq(min(subsets_taxons_agg[[2]]$depth_group), max(subsets_taxons_agg[[2]]$depth_group), length.out = nrow(subsets_taxons_agg[[2]]))
+fitted_values <- predict(model_agg_sponges, predict.x)
+plot(subsets_taxons_agg[[2]]$depth_group, subsets_taxons_agg[[2]]$value, pch = 21, col = "black", bg = "black", ylab="", xlab = "")
+lines(predict.x, fitted_values, col = "#BAE4BC", lwd = 3)
+
+predict.x <- seq(min(subsets_taxons_agg[[3]]$depth_group), max(subsets_taxons_agg[[3]]$depth_group), length.out = nrow(subsets_taxons_agg[[3]]))
+fitted_values <- predict(model_agg_stony, predict.x)
+plot(subsets_taxons_agg[[3]]$depth_group, subsets_taxons_agg[[3]]$value, pch = 21, col = "black", bg = "black", ylab="", xlab = "")
+lines(predict.x, fitted_values, col = "#BAE4BC", lwd = 3)
+
+predict.x <- seq(min(subsets_taxons_agg[[4]]$depth_group), max(subsets_taxons_agg[[4]]$depth_group), length.out = nrow(subsets_taxons_agg[[4]]))
+fitted_values <- predict(model_agg_soft, predict.x)
+plot(subsets_taxons_agg[[4]]$depth_group, subsets_taxons_agg[[4]]$value, pch = 21, col = "black", bg = "black", ylab="", xlab = "")
+lines(predict.x, fitted_values, col = "#BAE4BC", lwd = 3)
+
+# Add shared x-axis label
+mtext("Depth (m)", side = 1, outer = TRUE, line = 3, cex = 1.5, font = 2)
+
+# Add overall title
+mtext("Marine Biodiversity Metrics Across Depth Gradients", side = 3, outer = TRUE, line = 1, cex = 1.8, font = 2)
+
+# Reset layout to default
+par(mfrow = c(1, 1))
+
 
      # 
